@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+
 import model.*;
 import model.enemies.Enemy;
 import model.enemies.NoobEnemy;
 import view.GameboardUI;
+import view.Options;
 
 public class Gameboard {
 	// private Level level;
@@ -29,7 +31,7 @@ public class Gameboard {
 	private boolean enemiesGoToRight = true;
 	private int enemyShootTimer = 0;
 
-	private boolean gameEnded;
+	private boolean gameClosed;
 	private boolean playerLost;
 
 	public Gameboard() {
@@ -41,15 +43,19 @@ public class Gameboard {
 		startGame();
 	}
 
+	public boolean gameIsClosed() {
+		return gameClosed; 
+	}
 	public void startGame() {
 		player = new Player(new Coordinate(GameboardUI.SIZE.getWidth() / 2, GameboardUI.SIZE.getHeight() - 128));
 		//number sets shootingRate Random maxBound
 		//lower = faster || number != 0
-		createEnemies(3);
+		createEnemies(Options.getChoosenDiff().getShootingRate());
 		audio.playBackgroundMusic();
 	}
 
 	public void stopGame() {
+		gameClosed = true; 
 		audio.stopBackgroundMusic();
 	}
 
@@ -57,16 +63,24 @@ public class Gameboard {
 
 	}
 
-	public List<Shot> enemyShoot() {
-		List<Shot> s = new ArrayList<Shot>();
+	public List<Integer> enemyShoot() {
+		List<Integer> s = new ArrayList<Integer>();
 		for (Enemy enemy : enemies) {
 			if (enemy.isAlive() && ((enemyShootTimer % enemy.getShootingRate()) == 0)) {
 				Coordinate shotStartPosition = new Coordinate(enemy.getPosition().getX() + 50,
 						enemy.getPosition().getY() + 100);
-				Shot shot = new Shot(Direction.down, shotStartPosition);
+				int indexOfShot = reUseShot(shotStartPosition, Direction.down);
+				Shot shot; 
+				if(indexOfShot==-1) {
+					shot = new Shot(Direction.down, shotStartPosition);
+					shots.add(shot);
+					s.add(shots.size()-1);
+				}else {
+					s.add(indexOfShot);
+				}
+				
 				audio.playShotSound();
-				shots.add(shot);
-				s.add(shot);
+				
 			}
 		}
 		enemyShootTimer++;
@@ -87,16 +101,15 @@ public class Gameboard {
 	}
 
 	// take destroyed shots for new shots
-	public int reUseShot() {
+	public int reUseShot(Coordinate shotStartPosition, Direction newDirection) {
 		int i = 0;
 		for (Shot shot : shots) {
 			//player reuses shot
 			if (shot.isDestroyed()) {
-				Coordinate shotStartPosition = new Coordinate(player.getPosition().getX() + 48,
-						player.getPosition().getY() + 2);
+				
 				shot.setPosition(shotStartPosition);
 				shot.setDestroyed(false);
-				shot.setDirection(Direction.up);
+				shot.setDirection(newDirection);
 				audio.playShotSound();
 				return i;
 			}
@@ -118,9 +131,7 @@ public class Gameboard {
 		Random r = new Random();
 		for (int i = 0; i < NUMBEROFENEMIES; i++) {
 			Enemy newEnemy = new NoobEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
-			int rate = r.nextInt(shootingRate);
-			if(rate == 0)
-				rate = rate + shootingRate;
+			int rate = r.nextInt(shootingRate)+2;
 			newEnemy.setShootingRate(rate);
 			enemies.add(newEnemy);
 		}
@@ -204,7 +215,7 @@ public class Gameboard {
 		}
 
 		if (!player.isAlive() || allEnemiesDead) {
-			gameEnded = true;
+			
 			if (!allEnemiesDead) {
 				playerLost = true;
 				audio.playGameOverSound();

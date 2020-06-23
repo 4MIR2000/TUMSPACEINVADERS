@@ -124,76 +124,87 @@ public class GameboardUI extends Canvas{
 		
 			@Override
 			public void handle(long now) {
-				
-				if(!gameboard.checkIfGameEnded()) {
-					if(nanosOfLastPlayerMovement==-1||now-nanosOfLastPlayerMovement>=1000000) {
-						movePlayer();
-						nanosOfLastPlayerMovement = now;
-					}
-						
-					
-					//move enemies slower
-					if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=2000000) {
-						moveEnemies();
-						nanosOfLastEnemyMovement = now; 
-					}
-					
-					if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=600000000) {
-						enemyShoot();
-						nanosOfLastEnemyShooting = now; 
-					}
-					
-					if(keyboardController.isSpaceKeyPressed()) {
-						//shoot
-						if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=300000000) {
-							int indexOfReUseShot = gameboard.reUseShot(); 
-							if(indexOfReUseShot==-1) {
-								//there is no detroyed shot -> create a new one 
-								Shot createdShot = gameboard.playerShoot();
-								paintShot(createdShot, -1);
-							}else {
-								paintShot(gameboard.getShots().get(indexOfReUseShot), indexOfReUseShot);
-							}
-							nanosOfLastPlayerShooting = now;
+				if(!gameboard.gameIsClosed()) {
+					if(!gameboard.checkIfGameEnded()) {
+						if(nanosOfLastPlayerMovement==-1||now-nanosOfLastPlayerMovement>=1000000) {
+							movePlayer();
+							nanosOfLastPlayerMovement = now;
 						}
-					}
-					
-					if(nanosOfLastShotMovement==-1||now-nanosOfLastShotMovement>=2000000) {
-						moveShots(); 
-						gameboard.collisionDetection(); 
-						//remove destoryed shots 
-						removeDestroyedShots(); 
-						removeKilledEnemies();
-						//remove destroyed enemies
-						nanosOfLastShotMovement = now;
-					}
-					
-				}else {
-					//gameEnded
-					if(gameboard.playerHasLost()) {
-						ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(LOSTIMAGE).toExternalForm(),600,800,false,true));
-						view.setOpacity(20);
-						pane.getChildren().add(view);
+							
+						
+						//move enemies slower
+						if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=2000000) {
+							moveEnemies();
+							nanosOfLastEnemyMovement = now; 
+						}
+						
+						if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=600000000) {
+							enemyShoot();
+							nanosOfLastEnemyShooting = now; 
+						}
+						
+						if(keyboardController.isSpaceKeyPressed()) {
+							//shoot
+							if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=300000000) {
+								int indexOfReUseShot = gameboard.reUseShot(new Coordinate(gameboard.getPlayer().getPosition().getX() + 48,
+										gameboard.getPlayer().getPosition().getY() + 2), Direction.up); 
+								if(indexOfReUseShot==-1) {
+									//there is no detroyed shot -> create a new one 
+									Shot createdShot = gameboard.playerShoot();
+									paintShot(createdShot, -1);
+								}else {
+									paintShot(gameboard.getShots().get(indexOfReUseShot), indexOfReUseShot);
+								}
+								nanosOfLastPlayerShooting = now;
+							}
+						}
+						
+						if(nanosOfLastShotMovement==-1||now-nanosOfLastShotMovement>=2000000) {
+							moveShots(); 
+							gameboard.collisionDetection(); 
+							//remove destoryed shots 
+							removeDestroyedShots(); 
+							removeKilledEnemies();
+							//remove destroyed enemies
+							nanosOfLastShotMovement = now;
+						}
+						
 					}else {
-						ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),600,800,false,true));
-						view.setOpacity(0.5);
-						pane.getChildren().add(view);
+						//gameEnded
+						if(gameboard.playerHasLost()) {
+							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(LOSTIMAGE).toExternalForm(),600,800,false,true));
+							view.setOpacity(20);
+							pane.getChildren().add(view);
+						}else {
+							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),600,800,false,true));
+							view.setOpacity(0.5);
+							pane.getChildren().add(view);
+						}
+						gameTimer.stop();
+						scene.getRoot().requestFocus();
+						createBackButton();
 					}
+									
+				}else {
 					gameTimer.stop();
-					scene.getRoot().requestFocus();
-					createBackButton();
 				}
-				
-				
 			}
+				
 		};
 		gameTimer.start();
 	}
 	
 	public void enemyShoot() {
+		List<Integer> shotsIndices = gameboard.enemyShoot();
 		//implement ShotReUse
-		if(enemyShootTimer++ % 2 == 0)
-			gameboard.enemyShoot().forEach(shot -> paintShot(shot, -1));
+		for(int index:shotsIndices) {
+			if(index>=shotsImages.size()) {
+				paintShot(gameboard.getShots().get(index), -1);
+			}else {
+				paintShot(gameboard.getShots().get(index), index);
+			}
+		}
+		
 	}
 	
 	public void removeDestroyedShots() {
