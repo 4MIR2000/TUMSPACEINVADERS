@@ -8,6 +8,8 @@ import java.util.Random;
 import model.*;
 import model.enemies.Enemy;
 import model.enemies.NoobEnemy;
+import model.enemies.ProEnemy;
+import model.enemies.SemiProEnemy;
 import view.GameboardUI;
 import view.Options;
 
@@ -50,7 +52,7 @@ public class Gameboard {
 		player = new Player(new Coordinate(GameboardUI.SIZE.getWidth() / 2, GameboardUI.SIZE.getHeight() - 128));
 		//number sets shootingRate Random maxBound
 		//lower = faster || number != 0
-		createEnemies(Options.getChoosenDiff().getShootingRate());
+		createEnemies();
 		audio.playBackgroundMusic();
 	}
 
@@ -127,11 +129,26 @@ public class Gameboard {
 		}
 	}
 
-	public void createEnemies(int shootingRate) {
+	public void createEnemies() {
+		//randomize a little bit ;)
 		Random r = new Random();
 		for (int i = 0; i < NUMBEROFENEMIES; i++) {
-			Enemy newEnemy = new NoobEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
-			int rate = r.nextInt(shootingRate)+2;
+			Enemy newEnemy; 
+			switch(Options.getChoosenDiff()) {
+			
+			case easy: 
+				newEnemy =  new NoobEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
+				break;
+			case medium: 
+				newEnemy =  new SemiProEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
+				break;
+			case hard: 
+				newEnemy =  new ProEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
+				break;
+			default: newEnemy =  new NoobEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
+			}
+			
+			int rate = r.nextInt(newEnemy.getShootingRate())+2;
 			newEnemy.setShootingRate(rate);
 			enemies.add(newEnemy);
 		}

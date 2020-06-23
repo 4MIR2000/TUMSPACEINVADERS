@@ -6,6 +6,8 @@ import javafx.util.Duration;
 
 import java.net.URL;
 
+import com.sun.media.jfxmedia.MediaException;
+
 public class AudioPlayer {
 	
 	private String shotSound = "Sounds/paperThrow.wav";
@@ -29,40 +31,69 @@ public class AudioPlayer {
 	}
 
 	public void playShotSound() {
-		MediaPlayer mediaPlayerShot = new MediaPlayer(loadAudioFile(shotSound));
-		mediaPlayerShot.play();
+		try {
+			MediaPlayer mediaPlayerShot = new MediaPlayer(loadAudioFile(shotSound));
+			mediaPlayerShot.play();
+		}catch(Exception e) {
+			//System.err.println("sound could not be played: MediaException!"); 
+		}
+		
 	}
 	
 	public void playEnemyHurtSound() {
-		MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
-		mediaPlayerHurt.setVolume(0.5);
-		mediaPlayerHurt.play();
+		try {
+			MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
+			mediaPlayerHurt.setVolume(0.5);
+			mediaPlayerHurt.play();
+		}catch(Exception e) {
+			
+		}
+		
 	}
 
 	public void playEnemyDeadSound() {
-		MediaPlayer mediaPlayerDeathSound = new MediaPlayer(loadAudioFile(enemyDeadSound));
-		mediaPlayerDeathSound.setVolume(0.2);
-		mediaPlayerDeathSound.play();
+		try {
+			MediaPlayer mediaPlayerDeathSound = new MediaPlayer(loadAudioFile(enemyDeadSound));
+			mediaPlayerDeathSound.setVolume(0.2);
+			mediaPlayerDeathSound.play();
+		}catch(Exception e) {
+			
+		}
+		
 	}
 	
 	public void playPlayerHurtSound() {
-		MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
-		mediaPlayerHurt.setVolume(0.5);
-		mediaPlayerHurt.play();
+		try {
+			MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
+			mediaPlayerHurt.setVolume(0.5);
+			mediaPlayerHurt.play();
+		}catch(Exception e) {
+			
+		}
+		
 	}
 	
 	public void playWinSound() {
-		MediaPlayer mediaPlayerWin = new MediaPlayer(loadAudioFile(WinSound));
-		mediaPlayerWin.setVolume(0.3);
-		mediaPlayerWin.play();
+		try {
+			MediaPlayer mediaPlayerWin = new MediaPlayer(loadAudioFile(WinSound));
+			mediaPlayerWin.setVolume(0.3);
+			mediaPlayerWin.play();
+		}catch(Exception e) {
+			
+		}
+		
 	}
 	
 	public void playGameOverSound() {
-		MediaPlayer mediaPlayerGameOver = new MediaPlayer(loadAudioFile(GameOverSound));
-		mediaPlayerGameOver.play();
-		MediaPlayer mediaPlayerJingle = new MediaPlayer(loadAudioFile(gameOverJingle));
-		mediaPlayerJingle.play();
-		mediaPlayerGameOver.play();
+		try {
+			MediaPlayer mediaPlayerGameOver = new MediaPlayer(loadAudioFile(GameOverSound));
+			mediaPlayerGameOver.play();
+			MediaPlayer mediaPlayerJingle = new MediaPlayer(loadAudioFile(gameOverJingle));
+			mediaPlayerJingle.play();
+			mediaPlayerGameOver.play();
+		}catch(Exception e) {
+			
+		}
 	}
 
 	private Media loadAudioFile(String fileName) {
@@ -75,22 +106,33 @@ public class AudioPlayer {
 	}
 
 	public void playBackgroundMusic() {
-		if (!this.playingBackgroundMusic) {
-			this.playingBackgroundMusic = true;
-			this.mediaPlayerBackgroundMusic = new MediaPlayer(loadAudioFile(backgroundMusic1));
-			mediaPlayerBackgroundMusic.setVolume(0.1);
-			this.mediaPlayerBackgroundMusic.setAutoPlay(true);
-			// Loop for the main music sound:
-			this.mediaPlayerBackgroundMusic
-					.setOnEndOfMedia(() -> AudioPlayer.this.mediaPlayerBackgroundMusic.seek(Duration.ZERO));
-			this.mediaPlayerBackgroundMusic.play();
+		try {
+			if (!this.playingBackgroundMusic) {
+				this.playingBackgroundMusic = true;
+				this.mediaPlayerBackgroundMusic = new MediaPlayer(loadAudioFile(backgroundMusic1));
+				mediaPlayerBackgroundMusic.setVolume(0.1);
+				this.mediaPlayerBackgroundMusic.setAutoPlay(true);
+				// Loop for the main music sound:
+				this.mediaPlayerBackgroundMusic
+						.setOnEndOfMedia(() -> AudioPlayer.this.mediaPlayerBackgroundMusic.seek(Duration.ZERO));
+				this.mediaPlayerBackgroundMusic.play();
+			}
+		}catch(Exception e) {
+			//System.err.println("sound could not be played: MediaException!"); 
 		}
+		
 	}
 
 	public void stopBackgroundMusic() {
-		if (this.playingBackgroundMusic) {
-			this.playingBackgroundMusic = false;
-			this.mediaPlayerBackgroundMusic.stop();
+		try {
+			if (this.playingBackgroundMusic) {
+				this.playingBackgroundMusic = false;
+				this.mediaPlayerBackgroundMusic.stop();
+			}
+		}catch(Exception e){
+			//System.err.println("sound could not be played: MediaException!"); 
+
 		}
+		
 	}
 }

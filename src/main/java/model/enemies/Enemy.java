@@ -5,18 +5,18 @@ import model.Coordinate;
 
 public class Enemy extends GameCharacter {
 	
-
-	public Enemy(int speed, String icon, Coordinate position) {
+	private int shootingRate; 
+	
+	public Enemy(int speed, int shootingRate, String icon, Coordinate position) {
 		super(speed, icon, position);
+		this.shootingRate = shootingRate;
 	}
 	
-	private double shootingRate; 
-	
-	public void setShootingRate(double rate) {
+	public void setShootingRate(int rate) {
 		this.shootingRate = rate; 
 	}
 	
-	public double getShootingRate() {
+	public int getShootingRate() {
 		return shootingRate;
 	}
 	

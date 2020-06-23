@@ -3,10 +3,12 @@ package model.enemies;
 import model.Coordinate;
 
 public class ProEnemy extends Enemy {
-	private static final String PROICON = "proIcon.png";
+	private static final String PROICON = "proEnemy1.png";
+	private static final int PROSHOOTINGRATE = 1;
+	private static final int PROSPEED = 3;
 	
-	public ProEnemy(int speed, Coordinate position) {
-		super(speed, PROICON, position);
+	public ProEnemy(Coordinate position) {
+		super(PROSPEED, PROSHOOTINGRATE,PROICON, position);
 	}	
 
 }
