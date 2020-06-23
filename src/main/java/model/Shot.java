@@ -42,7 +42,6 @@ public class Shot {
 				position.setY(position.getY()+speed);
 			}
 		}
-			
 	}
 	
 	public boolean isDestroyed() {
@@ -50,5 +49,9 @@ public class Shot {
 	}
 	public Direction getDirection() {
 		return direction; 
+	}
+	
+	public void setDirection(Direction direction) {
+		this.direction = direction;
 	}
 }

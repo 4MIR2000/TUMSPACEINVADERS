@@ -48,6 +48,7 @@ public class GameboardUI extends Canvas{
 	private long nanosOfLastPlayerMovement = -1;
 	private long nanosOfLastEnemyMovement = -1;
 	private long nanosOfLastShotMovement = -1;
+	private long nanosOfLastEnemyShooting = -1;
 	
 	private long nanosOfLastPlayerShooting = -1;
 	
@@ -132,7 +133,13 @@ public class GameboardUI extends Canvas{
 					//move enemies slower
 					if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=2000000) {
 						moveEnemies();
+						
 						nanosOfLastEnemyMovement = now; 
+					}
+					
+					if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=999999999) {
+						enemyShoot();
+						nanosOfLastEnemyShooting = now; 
 					}
 					
 					if(keyboardController.isSpaceKeyPressed()) {
@@ -146,9 +153,6 @@ public class GameboardUI extends Canvas{
 							}else {
 								paintShot(gameboard.getShots().get(indexOfReUseShot), indexOfReUseShot);
 							}
-					
-									
-							
 							nanosOfLastPlayerShooting = now;
 						}
 					}
@@ -171,15 +175,23 @@ public class GameboardUI extends Canvas{
 						pane.getChildren().add(view);
 					}else {
 						ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),600,800,false,true));
-						view.setOpacity(0.1);
+						view.setOpacity(0.5);
 						pane.getChildren().add(view);
 					}
+					gameTimer.stop();
+					scene.getRoot().requestFocus();
+					createBackButton();
 				}
 				
 				
 			}
 		};
 		gameTimer.start();
+	}
+	
+	public void enemyShoot() {
+		//implement reUseShot 
+		gameboard.enemyShoot().forEach(shot -> paintShot(shot, -1));
 	}
 	
 	public void removeDestroyedShots() {
@@ -282,6 +294,7 @@ public class GameboardUI extends Canvas{
 
 			@Override
 			public void handle(MouseEvent event) {
+				gameboard.stopGame();
 				stage.hide();
 				mainMenu.Callback();
 			}
