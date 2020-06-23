@@ -2,8 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-import javafx.scene.image.ImageView;
 import model.*;
 import model.enemies.Enemy;
 import model.enemies.NoobEnemy;
@@ -27,6 +27,7 @@ public class Gameboard {
 	private final int ENEMIESMINX = 5;
 
 	private boolean enemiesGoToRight = true;
+	private int enemyShootTimer = 0;
 
 	private boolean gameEnded;
 	private boolean playerLost;
@@ -42,7 +43,9 @@ public class Gameboard {
 
 	public void startGame() {
 		player = new Player(new Coordinate(GameboardUI.SIZE.getWidth() / 2, GameboardUI.SIZE.getHeight() - 128));
-		createEnemies();
+		//number sets shootingRate Random maxBound
+		//lower = faster || number != 0
+		createEnemies(3);
 		audio.playBackgroundMusic();
 	}
 
@@ -57,13 +60,16 @@ public class Gameboard {
 	public List<Shot> enemyShoot() {
 		List<Shot> s = new ArrayList<Shot>();
 		for (Enemy enemy : enemies) {
-			Coordinate shotStartPosition = new Coordinate(enemy.getPosition().getX() + 30,
-					enemy.getPosition().getY() + 2);
-			Shot shot = new Shot(Direction.down, shotStartPosition);
-			audio.playShotSound();
-			shots.add(shot);
-			s.add(shot);
+			if (enemy.isAlive() && ((enemyShootTimer % enemy.getShootingRate()) == 0)) {
+				Coordinate shotStartPosition = new Coordinate(enemy.getPosition().getX() + 50,
+						enemy.getPosition().getY() + 100);
+				Shot shot = new Shot(Direction.down, shotStartPosition);
+				audio.playShotSound();
+				shots.add(shot);
+				s.add(shot);
+			}
 		}
+		enemyShootTimer++;
 		return s;
 	}
 
@@ -72,7 +78,6 @@ public class Gameboard {
 	}
 
 	public Shot playerShoot() {
-
 		Coordinate shotStartPosition = new Coordinate(player.getPosition().getX() + 48,
 				player.getPosition().getY() + 2);
 		Shot shot = new Shot(Direction.up, shotStartPosition);
@@ -85,12 +90,14 @@ public class Gameboard {
 	public int reUseShot() {
 		int i = 0;
 		for (Shot shot : shots) {
+			//player reuses shot
 			if (shot.isDestroyed()) {
 				Coordinate shotStartPosition = new Coordinate(player.getPosition().getX() + 48,
 						player.getPosition().getY() + 2);
 				shot.setPosition(shotStartPosition);
 				shot.setDestroyed(false);
 				shot.setDirection(Direction.up);
+				audio.playShotSound();
 				return i;
 			}
 			i++;
@@ -107,11 +114,16 @@ public class Gameboard {
 		}
 	}
 
-	public void createEnemies() {
+	public void createEnemies(int shootingRate) {
+		Random r = new Random();
 		for (int i = 0; i < NUMBEROFENEMIES; i++) {
-			enemies.add(new NoobEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY)));
+			Enemy newEnemy = new NoobEnemy(new Coordinate(ENEMIESSTARTX + i * 96 + 5, ENEMIESSTARTY));
+			int rate = r.nextInt(shootingRate);
+			if(rate == 0)
+				rate = rate + shootingRate;
+			newEnemy.setShootingRate(rate);
+			enemies.add(newEnemy);
 		}
-
 	}
 
 	public void moveEnemies() {
@@ -148,31 +160,32 @@ public class Gameboard {
 	}
 
 	public void collisionDetection() {
+
 		for (Shot shot : shots) {
-			if (shot.isDestroyed())
-				return;
-			if (shot.getDirection().equals(Direction.up)) {
-				// player shot
-				for (Enemy enemy : enemies) {
-					if (enemy.isAlive()) {
-						Collision collision = new Collision(enemy, shot);
-						boolean hitted = collision.detectCollision();
-						if (hitted) {
-							audio.playEnemyHurtSound();
-							shot.setDestroyed(true);
+			if (shot.isDestroyed() == false) {
+				if (shot.getDirection().equals(Direction.up)) {
+					// player shot
+					if (enemies.isEmpty() == false) {
+						Collision collision = new Collision(enemies, shot);
+						if (collision.detectCollision()) {
+							Enemy enemy = collision.getLoosingEnemy();
 							enemy.reduceLife();
-							return;
+							audio.playEnemyHurtSound();
+							if(!enemy.isAlive())
+								audio.playEnemyDeadSound();
+							shot.setDestroyed(true);
 						}
 					}
-				}
-			} else {
-				if (shot.getDirection().equals(Direction.down)) {
-					// enemy shot
-					Collision collision = new Collision(player, shot);
-					boolean hitted = collision.detectCollision();
-					if (hitted) {
-						shot.setDestroyed(true);
-						player.reduceLife();
+				} else {
+					if (shot.getDirection().equals(Direction.down)) {
+						// enemy shot
+						Collision collision = new Collision(player, shot);
+						boolean hitted = collision.detectCollision();
+						if (hitted) {
+							shot.setDestroyed(true);
+							player.reduceLife();
+							audio.playPlayerHurtSound();
+						}
 					}
 				}
 			}
@@ -205,7 +218,7 @@ public class Gameboard {
 
 	public boolean shotIsOutOfFrame(Shot shot) {
 		if (shot.getPosition().getY() >= GameboardUI.SIZE.getHeight()
-				|| shot.getPosition().getY() <= ENEMIESSTARTY - 50) {
+				|| shot.getPosition().getY() <= ENEMIESSTARTY - 250) {
 			return true;
 		}
 

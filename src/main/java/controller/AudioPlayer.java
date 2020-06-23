@@ -8,11 +8,14 @@ import java.net.URL;
 
 public class AudioPlayer {
 	
-	private String shotSound = "paperThrow.wav";
-	private String enemyHurtSound = "enemyHurt.wav";
-	private String backgroundMusic1 = "backgroundMusic1.wav";
-	private final String GameOverSound = "gameOver.wav";
-	private final String WinSound = "youWin.wav";
+	private String shotSound = "Sounds/paperThrow.wav";
+	//private String enemyHurtSound ="Sounds/";
+	private String enemyDeadSound = "Sounds/enemyHurt.wav";
+	private String playerHurtSound = "Sounds/playerHurt1.wav";
+	private String backgroundMusic1 = "Sounds/backgroundMusic1.wav";
+	private final String GameOverSound = "Sounds/gameOver.wav";
+	private String gameOverJingle = "Sounds/gameOverJingle.wav";
+	private final String WinSound = "Sounds/youWin.wav";
 	
 	private MediaPlayer mediaPlayerBackgroundMusic;
 	private boolean playingBackgroundMusic;
@@ -29,11 +32,23 @@ public class AudioPlayer {
 		MediaPlayer mediaPlayerShot = new MediaPlayer(loadAudioFile(shotSound));
 		mediaPlayerShot.play();
 	}
-
+	
 	public void playEnemyHurtSound() {
-		MediaPlayer mediaPlayerDeathSound = new MediaPlayer(loadAudioFile(enemyHurtSound));
-		mediaPlayerDeathSound.setVolume(0.4);
+		MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
+		mediaPlayerHurt.setVolume(0.5);
+		mediaPlayerHurt.play();
+	}
+
+	public void playEnemyDeadSound() {
+		MediaPlayer mediaPlayerDeathSound = new MediaPlayer(loadAudioFile(enemyDeadSound));
+		mediaPlayerDeathSound.setVolume(0.2);
 		mediaPlayerDeathSound.play();
+	}
+	
+	public void playPlayerHurtSound() {
+		MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
+		mediaPlayerHurt.setVolume(0.5);
+		mediaPlayerHurt.play();
 	}
 	
 	public void playWinSound() {
@@ -44,6 +59,9 @@ public class AudioPlayer {
 	
 	public void playGameOverSound() {
 		MediaPlayer mediaPlayerGameOver = new MediaPlayer(loadAudioFile(GameOverSound));
+		mediaPlayerGameOver.play();
+		MediaPlayer mediaPlayerJingle = new MediaPlayer(loadAudioFile(gameOverJingle));
+		mediaPlayerJingle.play();
 		mediaPlayerGameOver.play();
 	}
 

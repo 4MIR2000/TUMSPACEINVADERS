@@ -52,6 +52,8 @@ public class GameboardUI extends Canvas{
 	
 	private long nanosOfLastPlayerShooting = -1;
 	
+	private int enemyShootTimer = 0;
+	
 	private String backButton_style = "-fx-background-color: transparent; -fx-background-repeat: no-repeat; -fx-background-image: url('blue_sliderLeft.png')";
 
 	private MainMenu mainMenu; 
@@ -119,7 +121,7 @@ public class GameboardUI extends Canvas{
 	
 	private void startGameLoop() {
 		gameTimer = new AnimationTimer() {
-
+		
 			@Override
 			public void handle(long now) {
 				
@@ -133,11 +135,10 @@ public class GameboardUI extends Canvas{
 					//move enemies slower
 					if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=2000000) {
 						moveEnemies();
-						
 						nanosOfLastEnemyMovement = now; 
 					}
 					
-					if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=999999999) {
+					if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=600000000) {
 						enemyShoot();
 						nanosOfLastEnemyShooting = now; 
 					}
@@ -190,8 +191,9 @@ public class GameboardUI extends Canvas{
 	}
 	
 	public void enemyShoot() {
-		//implement reUseShot 
-		gameboard.enemyShoot().forEach(shot -> paintShot(shot, -1));
+		//implement ShotReUse
+		if(enemyShootTimer++ % 2 == 0)
+			gameboard.enemyShoot().forEach(shot -> paintShot(shot, -1));
 	}
 	
 	public void removeDestroyedShots() {

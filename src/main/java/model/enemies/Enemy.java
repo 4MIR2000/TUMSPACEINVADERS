@@ -16,6 +16,10 @@ public class Enemy extends GameCharacter {
 		this.shootingRate = rate; 
 	}
 	
+	public double getShootingRate() {
+		return shootingRate;
+	}
+	
 	@Override
 	public void shoot() {
 		// TODO Auto-generated method stub
