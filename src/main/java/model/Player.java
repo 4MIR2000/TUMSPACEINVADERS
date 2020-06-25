@@ -2,8 +2,9 @@ package model;
 
 public class Player extends GameCharacter{
 	private static final String PLAYERICON = "player.png";
+
 	public Player(Coordinate position) {
-		super(1,PLAYERICON, position);
+		super(1,PLAYERICON,PLAYERICON, position);
 	}
 
 	//the player sets the direction through the keyboard 

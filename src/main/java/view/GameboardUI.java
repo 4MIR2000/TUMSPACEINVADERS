@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import controller.Gameboard;
 import controller.KeyboardController;
@@ -23,6 +24,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Coordinate;
 import model.Direction;
+import model.Heart;
 import model.Shot;
 import model.enemies.Enemy;
 
@@ -44,6 +46,7 @@ public class GameboardUI extends Canvas{
 	
 	private List<ImageView> enemiesImages; 
 	private List<ImageView> shotsImages; 
+	private List<ImageView> heartsImages; 
 	
 	private long nanosOfLastPlayerMovement = -1;
 	private long nanosOfLastEnemyMovement = -1;
@@ -73,6 +76,7 @@ public class GameboardUI extends Canvas{
 		createBackground();
 		paintPlayer(); 
 		paintEnemies(); 
+		paintHearts();
 		createBackButton();
 		scene.getRoot().requestFocus();
 		stage.show();
@@ -130,8 +134,7 @@ public class GameboardUI extends Canvas{
 							movePlayer();
 							nanosOfLastPlayerMovement = now;
 						}
-							
-						
+													
 						//move enemies slower
 						if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=2000000) {
 							moveEnemies();
@@ -143,18 +146,14 @@ public class GameboardUI extends Canvas{
 							nanosOfLastEnemyShooting = now; 
 						}
 						
+						if(now-nanosOfLastEnemyShooting>=400000000) {						
+							//stop shooting animation
+							resetEnemyIcons(); 
+						}
 						if(keyboardController.isSpaceKeyPressed()) {
 							//shoot
-							if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=300000000) {
-								int indexOfReUseShot = gameboard.reUseShot(new Coordinate(gameboard.getPlayer().getPosition().getX() + 48,
-										gameboard.getPlayer().getPosition().getY() + 2), Direction.up); 
-								if(indexOfReUseShot==-1) {
-									//there is no detroyed shot -> create a new one 
-									Shot createdShot = gameboard.playerShoot();
-									paintShot(createdShot, -1);
-								}else {
-									paintShot(gameboard.getShots().get(indexOfReUseShot), indexOfReUseShot);
-								}
+							if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=400000000) {
+								playerShoot();
 								nanosOfLastPlayerShooting = now;
 							}
 						}
@@ -172,16 +171,15 @@ public class GameboardUI extends Canvas{
 					}else {
 						//gameEnded
 						if(gameboard.playerHasLost()) {
-							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(LOSTIMAGE).toExternalForm(),600,800,false,true));
+							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(LOSTIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true));
 							view.setOpacity(20);
 							pane.getChildren().add(view);
 						}else {
-							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),600,800,false,true));
+							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true));
 							view.setOpacity(0.5);
 							pane.getChildren().add(view);
 						}
 						gameTimer.stop();
-						scene.getRoot().requestFocus();
 						createBackButton();
 					}
 									
@@ -194,17 +192,54 @@ public class GameboardUI extends Canvas{
 		gameTimer.start();
 	}
 	
+	private void paintHearts() {
+		heartsImages = new ArrayList<ImageView>(); 
+		//create three hearts ;)
+		gameboard.createHearts();
+		for(Heart heart:gameboard.getHearts()) {
+			ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(heart.getIcon()).toExternalForm(),Heart.SIZE.getWidth(), Heart.SIZE.getHeight(),false,true)); 
+			pane.getChildren().add(view); 
+			view.setLayoutX(heart.getPosition().getX());
+			view.setLayoutY(heart.getPosition().getY());
+			heartsImages.add(view); 
+			
+		}
+	}
+	private void resetEnemyIcons() {
+		List<Enemy> enemies = gameboard.getEnemies(); 
+		for(int i=0; i<enemies.size(); i++) {
+			enemiesImages.get(i).setImage(new Image(getClass().getClassLoader().getResource(enemies.get(i).getIcon()).toExternalForm()));
+		}
+	}
+	
+	private void playerShoot() {
+		int indexOfReUseShot = gameboard.reUseShot(new Coordinate(gameboard.getPlayer().getPosition().getX() + 48,
+				gameboard.getPlayer().getPosition().getY() + 2), Direction.up); 
+		if(indexOfReUseShot==-1) {
+			//there is no detroyed shot -> create a new one 
+			Shot createdShot = gameboard.playerShoot();
+			paintShot(createdShot, -1);
+		}else {
+			paintShot(gameboard.getShots().get(indexOfReUseShot), indexOfReUseShot);
+		}
+	}
+	//the first element of the integer array is the shot index in the list shots and the second is the enemy index
 	public void enemyShoot() {
-		List<Integer> shotsIndices = gameboard.enemyShoot();
+		List<int[]> shotsIndices = gameboard.enemyShoot();
 		//implement ShotReUse
-		for(int index:shotsIndices) {
-			if(index>=shotsImages.size()) {
-				paintShot(gameboard.getShots().get(index), -1);
+		for(int[] indices:shotsIndices) {
+			if(indices[0]>=shotsImages.size()) {
+				paintShot(gameboard.getShots().get(indices[0]), -1);
 			}else {
-				paintShot(gameboard.getShots().get(index), index);
+				paintShot(gameboard.getShots().get(indices[0]), indices[0]);
 			}
+			
+			//shootingAnimation
+			Enemy shootingEnemy = gameboard.getEnemies().get(indices[1]);
+			enemiesImages.get(indices[1]).setImage(new Image(getClass().getClassLoader().getResource(shootingEnemy.getShootingIcon()).toExternalForm()));
 		}
 		
+	
 	}
 	
 	public void removeDestroyedShots() {

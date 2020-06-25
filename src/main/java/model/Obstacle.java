@@ -1,5 +1,6 @@
 package model;
 
+//TODO add tables here as obstacles 
 public class Obstacle {
 
 	private String icon; 

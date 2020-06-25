@@ -1,43 +1,35 @@
 package model;
 
 //in the analysis object model an abstract parent class should be added for Player and Enemy
-public abstract class GameCharacter {
+public abstract class GameCharacter extends GameObject {
 	protected int lives = 3;
 	private int speed; 
-	private String icon; 
-	private Coordinate position; 
+	private String shootingIcon; 
 	
-	public GameCharacter(int speed,String icon, Coordinate position) {
-		this.icon = icon; 
+	public GameCharacter(int speed,String icon,String shootingIcon, Coordinate position) {
+		super(icon,position); 
+		this.shootingIcon = shootingIcon;
 		this.speed = speed; 
-		this.position = position; 
+		
 	}
 	
+
 	public abstract void shoot(); 
 	
 	public abstract void reduceLife(); 
 	
 	public abstract void move(); 
 	
-	public void setIcon(String url) {
-		this.icon = url; 
+	
+	public String getShootingIcon() {
+		return shootingIcon; 
 	}
 	
 	public void setSpeed(int speed) {
 		this.speed = speed; 
 	}
 	
-	public void setPosition(Coordinate position) {
-		this.position = position; 
-	}
 	
-	public String getIcon() {
-		return icon; 
-	}
-	
-	public Coordinate getPosition() {
-		return position; 
-	}
 	
 	public int getSpeed() {
 		return speed; 

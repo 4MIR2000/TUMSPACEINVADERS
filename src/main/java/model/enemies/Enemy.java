@@ -7,8 +7,8 @@ public class Enemy extends GameCharacter {
 	
 	private int shootingRate; 
 	
-	public Enemy(int speed, int shootingRate, String icon, Coordinate position) {
-		super(speed, icon, position);
+	public Enemy(int speed, int shootingRate, String icon, String shootingIcon,Coordinate position) {
+		super(speed, icon, shootingIcon,position);
 		this.shootingRate = shootingRate;
 	}
 	

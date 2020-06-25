@@ -3,8 +3,10 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
-
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import model.*;
 import model.enemies.Enemy;
 import model.enemies.NoobEnemy;
@@ -36,6 +38,7 @@ public class Gameboard {
 	private boolean gameClosed;
 	private boolean playerLost;
 
+	private List<Heart> hearts; 
 	public Gameboard() {
 		// this.level = level;
 		// this.backgroundImage = image;
@@ -65,20 +68,22 @@ public class Gameboard {
 
 	}
 
-	public List<Integer> enemyShoot() {
-		List<Integer> s = new ArrayList<Integer>();
-		for (Enemy enemy : enemies) {
-			if (enemy.isAlive() && ((enemyShootTimer % enemy.getShootingRate()) == 0)) {
-				Coordinate shotStartPosition = new Coordinate(enemy.getPosition().getX() + 50,
-						enemy.getPosition().getY() + 100);
+	//the first element of the integer array is the shot index in the list shots and the second is the enemy index
+	//(from which enemy the shot comes: is used for animation later on gameboard)
+	public List<int[]> enemyShoot() {
+		List<int[]> s = new ArrayList<int[]>();
+		for (int i=0; i<enemies.size(); i++) {
+			if (enemies.get(i).isAlive() && ((enemyShootTimer % enemies.get(i).getShootingRate()) == 0)) {
+				Coordinate shotStartPosition = new Coordinate(enemies.get(i).getPosition().getX() + 50,
+						enemies.get(i).getPosition().getY() + 100);
 				int indexOfShot = reUseShot(shotStartPosition, Direction.down);
 				Shot shot; 
 				if(indexOfShot==-1) {
 					shot = new Shot(Direction.down, shotStartPosition);
 					shots.add(shot);
-					s.add(shots.size()-1);
+					s.add(new int[]{shots.size()-1,i});
 				}else {
-					s.add(indexOfShot);
+					s.add(new int[] {indexOfShot,i});
 				}
 				
 				audio.playShotSound();
@@ -129,6 +134,17 @@ public class Gameboard {
 		}
 	}
 
+	public void createHearts() {
+		hearts = new ArrayList<Heart>(); 
+		int gapSize = 5; 
+		IntStream.range(1,4).forEach(i->{
+			int x = (int) (GameboardUI.SIZE.getWidth()-i*(Heart.SIZE.getWidth()+gapSize));
+			int y = 0; 
+			Coordinate position = new Coordinate(x,y); 
+			Heart heart = new Heart(position); 
+			hearts.add(heart);
+		});
+	}
 	public void createEnemies() {
 		//randomize a little bit ;)
 		Random r = new Random();
@@ -263,5 +279,9 @@ public class Gameboard {
 
 	public List<Enemy> getEnemies() {
 		return enemies;
+	}
+	
+	public List<Heart> getHearts(){
+		return hearts; 
 	}
 }
