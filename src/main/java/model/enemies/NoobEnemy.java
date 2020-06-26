@@ -21,7 +21,7 @@ public class NoobEnemy extends Enemy {
 			shot.setDestroyed(false);
 			shot.setDirection(Direction.down);
 		}else {
-			shot.moveStraight();
+			shot.move();
 		}
 		
 	}

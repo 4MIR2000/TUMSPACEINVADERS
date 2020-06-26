@@ -31,7 +31,7 @@ public class Player extends GameCharacter{
 			shot.setDestroyed(false);
 			shot.setDirection(Direction.up);
 		}else {
-			shot.moveStraight();
+			shot.move();
 		}
 	}
 

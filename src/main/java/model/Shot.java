@@ -37,8 +37,16 @@ public class Shot {
 		return icon; 
 	}
 	
+	public void move() {
+		if(direction == Direction.down||direction == Direction.up) {
+			moveStraight();
+		}else {
+			moveDiagonal();
+		}
+	}
+	
 	//moves the shot according to speed and direction
-	public void moveStraight() {
+	private void moveStraight() {
 		if(direction==Direction.up) {
 			position.setY(position.getY()-speed);
 		}else {
@@ -48,14 +56,14 @@ public class Shot {
 		}
 	}
 	
-	public void moveDiagonal() {
+	private void moveDiagonal() {
 		if(direction==Direction.downDiagonal) {
 			position.setY(position.getY()+speed);
 			position.setX(position.getX()+1);
 		}else {
 			if(direction==Direction.upDiagonal) {
 				position.setY(position.getY()-speed);
-				position.setX(position.getX()+speed);
+				position.setX(position.getX()+1);
 			}
 		}
 	}
