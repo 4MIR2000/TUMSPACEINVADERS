@@ -242,7 +242,9 @@ public class GameboardUI extends Canvas{
 			
 			//shootingAnimation
 			GameCharacter shootingEnemy = shot.getValue();
-			//enemiesImages.get(s).setImage(new Image(getClass().getClassLoader().getResource(shootingEnemy.getShootingIcon()).toExternalForm()));
+			
+			int indexOfShootingEnemy = gameboard.getEnemies().indexOf(shot.getValue());
+			enemiesImages.get(indexOfShootingEnemy).setImage(new Image(getClass().getClassLoader().getResource(shootingEnemy.getShootingIcon()).toExternalForm()));
 		}
 		
 	
