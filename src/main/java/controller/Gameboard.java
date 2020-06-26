@@ -174,8 +174,8 @@ public class Gameboard {
 
 	public void moveEnemies() {
 		if (enemies.size() > 0) {
-			Enemy lastEnemy = enemies.get(enemies.size() - 1);
-			Enemy firstEnemy = enemies.get(0);
+			Enemy lastEnemy = getLastEnemy();
+			Enemy firstEnemy = getFirstEnemy();
 
 			if (lastEnemy.getPosition().getX() + lastEnemy.getSpeed() >= ENEMIESMAXX) {
 				// go to left;
@@ -193,6 +193,22 @@ public class Gameboard {
 		}
 	}
 
+	public Enemy getFirstEnemy() {
+		for(Enemy enemy:enemies) {
+			if(enemy.isAlive())
+				return enemy; 
+		}
+		return null; 
+	}
+	
+	//iterate backwards
+	public Enemy getLastEnemy() {
+		for(int i=enemies.size()-1; i>=0; i--) {
+			if(enemies.get(i).isAlive())
+				return enemies.get(i); 
+		}
+		return null; 
+	}
 	public void collisionDetection() {
 
 		for (Pair<Shot, GameCharacter> shot : shots) {
