@@ -3,6 +3,7 @@ package view;
 import java.awt.Canvas;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -24,7 +25,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.Coordinate;
 import model.Direction;
+import model.GameCharacter;
 import model.Heart;
+import model.Pair;
 import model.Shot;
 import model.enemies.Enemy;
 
@@ -213,39 +216,42 @@ public class GameboardUI extends Canvas{
 	}
 	
 	private void playerShoot() {
-		int indexOfReUseShot = gameboard.reUseShot(new Coordinate(gameboard.getPlayer().getPosition().getX() + 48,
-				gameboard.getPlayer().getPosition().getY() + 2), Direction.up); 
+		int indexOfReUseShot = gameboard.reUseShot(); 
 		if(indexOfReUseShot==-1) {
 			//there is no detroyed shot -> create a new one 
 			Shot createdShot = gameboard.playerShoot();
 			paintShot(createdShot, -1);
 		}else {
-			paintShot(gameboard.getShots().get(indexOfReUseShot), indexOfReUseShot);
+			Pair<Shot,GameCharacter> reuseShot = gameboard.getShots().get(indexOfReUseShot);
+			reuseShot.setValue(gameboard.getPlayer());
+			reuseShot.getValue().shoot(reuseShot.getKey(), true);		
+			paintShot(reuseShot.getKey(), indexOfReUseShot);
 		}
 	}
-	//the first element of the integer array is the shot index in the list shots and the second is the enemy index
+	
 	public void enemyShoot() {
-		List<int[]> shotsIndices = gameboard.enemyShoot();
+		List<Integer> shotsIndices = gameboard.enemyShoot();
 		//implement ShotReUse
-		for(int[] indices:shotsIndices) {
-			if(indices[0]>=shotsImages.size()) {
-				paintShot(gameboard.getShots().get(indices[0]), -1);
+		for(int shotIndex:shotsIndices) {
+			Pair<Shot,GameCharacter> shot = gameboard.getShots().get(shotIndex);
+			if(shotIndex>=shotsImages.size()) {
+				paintShot(shot.getKey(), -1);
 			}else {
-				paintShot(gameboard.getShots().get(indices[0]), indices[0]);
+				paintShot(shot.getKey(), shotIndex);
 			}
 			
 			//shootingAnimation
-			Enemy shootingEnemy = gameboard.getEnemies().get(indices[1]);
-			enemiesImages.get(indices[1]).setImage(new Image(getClass().getClassLoader().getResource(shootingEnemy.getShootingIcon()).toExternalForm()));
+			GameCharacter shootingEnemy = shot.getValue();
+			//enemiesImages.get(s).setImage(new Image(getClass().getClassLoader().getResource(shootingEnemy.getShootingIcon()).toExternalForm()));
 		}
 		
 	
 	}
 	
 	public void removeDestroyedShots() {
-		List<Shot> shots = gameboard.getShots(); 
+		List<Pair<Shot, GameCharacter>> shots = gameboard.getShots(); 
 		for(int i=0; i<shotsImages.size(); i++) {
-			if(shots.get(i).isDestroyed()) {
+			if(shots.get(i).getKey().isDestroyed()) {
 				pane.getChildren().remove(shotsImages.get(i));
 			}
 		}
@@ -262,11 +268,11 @@ public class GameboardUI extends Canvas{
 	
 	public void moveShots() {
 		gameboard.moveShots();
-		List<Shot> shots = gameboard.getShots(); 
+		List<Pair<Shot, GameCharacter>> shots = gameboard.getShots(); 
 		
 		for(int i=0; i<shots.size();i++) {
-			//shotsImages.get(i).setLayoutX(shots.get(i).getPosition().getX());
-			shotsImages.get(i).setLayoutY(shots.get(i).getPosition().getY());
+			shotsImages.get(i).setLayoutX(shots.get(i).getKey().getPosition().getX());
+			shotsImages.get(i).setLayoutY(shots.get(i).getKey().getPosition().getY());
 		}
 	}
 	public void moveEnemies() {
@@ -280,7 +286,7 @@ public class GameboardUI extends Canvas{
 	public void movePlayer() {
 		if(keyboardController.isLeftKeyPressed()&&!keyboardController.isRightKeyPressed()) {
 			if(gameboard.getPlayer().getPosition().getX()>-20) {
-				gameboard.movePlayer(Direction.left);
+				gameboard.getPlayer().move(Direction.left);
 			}
 			
 			//change image 
@@ -290,7 +296,7 @@ public class GameboardUI extends Canvas{
 		//right key pressed
 		if(keyboardController.isRightKeyPressed()&&!keyboardController.isLeftKeyPressed()) {
 			if(gameboard.getPlayer().getPosition().getX()<522) {
-				gameboard.movePlayer(Direction.right);
+				gameboard.getPlayer().move(Direction.right);
 			}
 			playerImage.setImage(new Image(getClass().getClassLoader().getResource(gameboard.getPlayer().getRunIcon2()).toExternalForm()));
 		}

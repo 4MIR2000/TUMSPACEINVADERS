@@ -2,7 +2,7 @@ package model;
 
 public class Player extends GameCharacter{
 	private static final String PLAYERICON = "player.png";
-
+ 
 	public Player(Coordinate position) {
 		super(1,PLAYERICON,PLAYERICON, position);
 	}
@@ -18,9 +18,21 @@ public class Player extends GameCharacter{
 		this.direction = direction; 
 	}
 
+	public Coordinate getShotStartPosition() {
+		return new Coordinate(getPosition().getX() + 48,
+				getPosition().getY() + 2);
+	}
+	
+	//also moves the shot 
 	@Override
-	public void shoot() {
-		
+	public void shoot(Shot shot, boolean reset) {
+		if(reset) {
+			shot.setPosition(getShotStartPosition());
+			shot.setDestroyed(false);
+			shot.setDirection(Direction.up);
+		}else {
+			shot.moveStraight();
+		}
 	}
 
 	@Override
@@ -29,8 +41,14 @@ public class Player extends GameCharacter{
 	}
 
 	@Override
-	public void move() {
-		
+	public void move(Direction direction) {
+		if (direction.equals(Direction.left)) {
+			getPosition().setX(getPosition().getX() - getSpeed());
+		} else {
+			if (direction.equals(Direction.right)) {
+				getPosition().setX(getPosition().getX() + getSpeed());
+			}
+		}
 	}
 	
 	public String getRunIcon1() {

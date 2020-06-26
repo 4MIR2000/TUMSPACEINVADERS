@@ -1,6 +1,8 @@
 package model.enemies;
 
 import model.Coordinate;
+import model.Direction;
+import model.Shot;
 
 public class SemiProEnemy extends Enemy {
 	private static final String SEMIPROICON = "semiProEnemy1.png"; 
@@ -12,5 +14,16 @@ public class SemiProEnemy extends Enemy {
 		super(MEDIUMSPEED, MEDIUMSHOOTINGRATE, SEMIPROICON,SEMIPROSHOOTINGICON, position);
 	}
 
+	@Override
+	public void shoot(Shot shot, boolean reset) {
+		if(reset) {
+			shot.setPosition(getShotStartPosition());
+			shot.setDestroyed(false);
+			shot.setDirection(Direction.down);
+		}else {
+			shot.moveStraight();
+		}
+		
+	}
 	
 }

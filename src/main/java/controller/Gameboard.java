@@ -1,7 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -22,7 +24,8 @@ public class Gameboard {
 	private AudioPlayer audio;
 	private Player player;
 	private List<Enemy> enemies;
-	private List<Shot> shots;
+	//value is the gameCharacter who created the shot
+	private List<Pair<Shot,GameCharacter>> shots;
 
 	private final int NUMBEROFENEMIES = 3;
 
@@ -44,7 +47,7 @@ public class Gameboard {
 		// this.backgroundImage = image;
 		audio = new AudioPlayer();
 		enemies = new ArrayList<Enemy>();
-		shots = new ArrayList<Shot>();
+		shots = new ArrayList<Pair<Shot,GameCharacter>>();
 		startGame();
 	}
 
@@ -68,22 +71,26 @@ public class Gameboard {
 
 	}
 
-	//the first element of the integer array is the shot index in the list shots and the second is the enemy index
-	//(from which enemy the shot comes: is used for animation later on gameboard)
-	public List<int[]> enemyShoot() {
-		List<int[]> s = new ArrayList<int[]>();
+	//returns listof indeces of the new shots in the shots map
+	public List<Integer> enemyShoot() {
+		List<Integer> s = new ArrayList<Integer>();
 		for (int i=0; i<enemies.size(); i++) {
 			if (enemies.get(i).isAlive() && ((enemyShootTimer % enemies.get(i).getShootingRate()) == 0)) {
-				Coordinate shotStartPosition = new Coordinate(enemies.get(i).getPosition().getX() + 50,
-						enemies.get(i).getPosition().getY() + 100);
-				int indexOfShot = reUseShot(shotStartPosition, Direction.down);
+				
+				int indexOfShot = reUseShot();
 				Shot shot; 
 				if(indexOfShot==-1) {
-					shot = new Shot(Direction.down, shotStartPosition);
-					shots.add(shot);
-					s.add(new int[]{shots.size()-1,i});
+					shot = new Shot();
+					enemies.get(i).shoot(shot,true);
+					shots.add(new Pair(shot,enemies.get(i)));
+					s.add(shots.size()-1);
 				}else {
-					s.add(new int[] {indexOfShot,i});
+					Pair<Shot,GameCharacter> reusedShot = shots.get(indexOfShot);
+					//change the enemy shooting the shot
+					reusedShot.setValue(enemies.get(i));
+					enemies.get(i).shoot(reusedShot.getKey(), true);
+					s.add(indexOfShot);
+					
 				}
 				
 				audio.playShotSound();
@@ -94,29 +101,24 @@ public class Gameboard {
 		return s;
 	}
 
-	public List<Shot> getShots() {
+	public List<Pair<Shot,GameCharacter>> getShots() {
 		return shots;
 	}
 
 	public Shot playerShoot() {
-		Coordinate shotStartPosition = new Coordinate(player.getPosition().getX() + 48,
-				player.getPosition().getY() + 2);
-		Shot shot = new Shot(Direction.up, shotStartPosition);
+		Shot shot = new Shot();
+		player.shoot(shot, true);
 		audio.playShotSound();
-		shots.add(shot);
+		shots.add(new Pair(shot,player));
 		return shot;
 	}
 
 	// take destroyed shots for new shots
-	public int reUseShot(Coordinate shotStartPosition, Direction newDirection) {
+	public int reUseShot() {
 		int i = 0;
-		for (Shot shot : shots) {
+		for (Pair<Shot, GameCharacter> shot : shots) {
 			//player reuses shot
-			if (shot.isDestroyed()) {
-				
-				shot.setPosition(shotStartPosition);
-				shot.setDestroyed(false);
-				shot.setDirection(newDirection);
+			if (shot.getKey().isDestroyed()) {
 				audio.playShotSound();
 				return i;
 			}
@@ -126,11 +128,11 @@ public class Gameboard {
 	}
 
 	public void moveShots() {
-		for (Shot shot : shots) {
-			if (!shotIsOutOfFrame(shot))
-				shot.move();
+		for (Pair<Shot, GameCharacter> shot : shots) {
+			if (!shotIsOutOfFrame(shot.getKey()))
+				shot.getValue().shoot(shot.getKey(), false);
 			else
-				shot.setDestroyed(true);
+				shot.getKey().setDestroyed(true);
 		}
 	}
 
@@ -183,50 +185,39 @@ public class Gameboard {
 			}
 			for (Enemy enemy : enemies) {
 				if (enemiesGoToRight) {
-					enemy.setPosition(
-							new Coordinate(enemy.getPosition().getX() + enemy.getSpeed(), enemy.getPosition().getY()));
+					enemy.move(Direction.right);
 				} else {
-					enemy.setPosition(
-							new Coordinate(enemy.getPosition().getX() - enemy.getSpeed(), enemy.getPosition().getY()));
+					enemy.move(Direction.left);
 				}
-			}
-		}
-	}
-
-	public void movePlayer(Direction direction) {
-		if (direction.equals(Direction.left)) {
-			player.getPosition().setX(player.getPosition().getX() - player.getSpeed());
-		} else {
-			if (direction.equals(Direction.right)) {
-				player.getPosition().setX(player.getPosition().getX() + player.getSpeed());
 			}
 		}
 	}
 
 	public void collisionDetection() {
 
-		for (Shot shot : shots) {
-			if (shot.isDestroyed() == false) {
-				if (shot.getDirection().equals(Direction.up)) {
+		for (Pair<Shot, GameCharacter> shot : shots) {
+			if (shot.getKey().isDestroyed() == false) {
+				if (shot.getKey().getDirection().equals(Direction.up)) {
 					// player shot
 					if (enemies.isEmpty() == false) {
-						Collision collision = new Collision(enemies, shot);
+						Collision collision = new Collision(enemies, shot.getKey());
 						if (collision.detectCollision()) {
 							Enemy enemy = collision.getLoosingEnemy();
 							enemy.reduceLife();
 							audio.playEnemyHurtSound();
-							if(!enemy.isAlive())
+							if(!enemy.isAlive()) {
 								audio.playEnemyDeadSound();
-							shot.setDestroyed(true);
+							}							
+							shot.getKey().setDestroyed(true);
 						}
 					}
 				} else {
-					if (shot.getDirection().equals(Direction.down)) {
+					if (shot.getKey().getDirection().equals(Direction.down)||shot.getKey().getDirection().equals(Direction.downDiagonal)) {
 						// enemy shot
-						Collision collision = new Collision(player, shot);
+						Collision collision = new Collision(player, shot.getKey());
 						boolean hitted = collision.detectCollision();
 						if (hitted) {
-							shot.setDestroyed(true);
+							shot.getKey().setDestroyed(true);
 							player.reduceLife();
 							audio.playPlayerHurtSound();
 						}
@@ -262,7 +253,7 @@ public class Gameboard {
 
 	public boolean shotIsOutOfFrame(Shot shot) {
 		if (shot.getPosition().getY() >= GameboardUI.SIZE.getHeight()
-				|| shot.getPosition().getY() <= ENEMIESSTARTY - 250) {
+				|| shot.getPosition().getY() <= ENEMIESSTARTY-20) {
 			return true;
 		}
 

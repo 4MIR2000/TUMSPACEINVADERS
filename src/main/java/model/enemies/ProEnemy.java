@@ -1,6 +1,8 @@
 package model.enemies;
 
 import model.Coordinate;
+import model.Direction;
+import model.Shot;
 
 public class ProEnemy extends Enemy {
 	private static final String PROICON = "proEnemy1.png";
@@ -12,4 +14,15 @@ public class ProEnemy extends Enemy {
 		super(PROSPEED, PROSHOOTINGRATE,PROICON,PROSHOOTINGICON,position);
 	}	
 
+	@Override
+	public void shoot(Shot shot, boolean reset) {
+		if(reset) {
+			shot.setPosition(getShotStartPosition());
+			shot.setDestroyed(false);
+			shot.setDirection(Direction.downDiagonal);
+		}else {
+			shot.moveDiagonal();
+		}
+		
+	}
 }

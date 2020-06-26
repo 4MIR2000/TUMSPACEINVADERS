@@ -14,11 +14,11 @@ public abstract class GameCharacter extends GameObject {
 	}
 	
 
-	public abstract void shoot(); 
+	public abstract void shoot(Shot shot, boolean reset); 
 	
 	public abstract void reduceLife(); 
 	
-	public abstract void move(); 
+	public abstract void move(Direction direction); 
 	
 	
 	public String getShootingIcon() {

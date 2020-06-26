@@ -1,9 +1,11 @@
 package model.enemies;
 
 import model.GameCharacter;
+import model.Shot;
 import model.Coordinate;
+import model.Direction;
 
-public class Enemy extends GameCharacter {
+public abstract class Enemy extends GameCharacter {
 	
 	private int shootingRate; 
 	
@@ -20,12 +22,11 @@ public class Enemy extends GameCharacter {
 		return shootingRate;
 	}
 	
-	@Override
-	public void shoot() {
-		// TODO Auto-generated method stub
-		
-	}
 
+	public Coordinate getShotStartPosition() {
+		return new Coordinate(getPosition().getX() + 50,
+				getPosition().getY() + 100);
+	}
 	@Override
 	public void reduceLife() {
 		
@@ -33,8 +34,14 @@ public class Enemy extends GameCharacter {
 	}
 
 	@Override
-	public void move() {
-		// TODO Auto-generated method stub
+	public void move(Direction direction) {
+		if (direction.equals(Direction.right)) {
+			setPosition(
+					new Coordinate(getPosition().getX() + getSpeed(), getPosition().getY()));
+		} else {
+			setPosition(
+					new Coordinate(getPosition().getX() - getSpeed(), getPosition().getY()));
+		}
 		
 	}
 	

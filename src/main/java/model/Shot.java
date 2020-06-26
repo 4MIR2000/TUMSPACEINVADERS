@@ -11,6 +11,10 @@ public class Shot {
 		this.direction = direction; 
 		this.position = startPos; 
 	}
+	
+	public Shot() {
+		
+	}
 	/*changes the position of the shot 
 	 * in a loop and moves it. 
 	 */
@@ -34,12 +38,24 @@ public class Shot {
 	}
 	
 	//moves the shot according to speed and direction
-	public void move() {
+	public void moveStraight() {
 		if(direction==Direction.up) {
 			position.setY(position.getY()-speed);
 		}else {
 			if(direction==Direction.down) {
 				position.setY(position.getY()+speed);
+			}
+		}
+	}
+	
+	public void moveDiagonal() {
+		if(direction==Direction.downDiagonal) {
+			position.setY(position.getY()+speed);
+			position.setX(position.getX()+1);
+		}else {
+			if(direction==Direction.upDiagonal) {
+				position.setY(position.getY()-speed);
+				position.setX(position.getX()+speed);
 			}
 		}
 	}
