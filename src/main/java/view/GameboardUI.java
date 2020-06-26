@@ -167,6 +167,7 @@ public class GameboardUI extends Canvas{
 							//remove destoryed shots 
 							removeDestroyedShots(); 
 							removeKilledEnemies();
+							removeHeart(); 
 							//remove destroyed enemies
 							nanosOfLastShotMovement = now;
 						}
@@ -195,6 +196,15 @@ public class GameboardUI extends Canvas{
 		gameTimer.start();
 	}
 	
+	//removes heart if player lost one life
+	private void removeHeart() {
+		if(heartsImages.size()>0&&gameboard.getPlayer().getLives()<heartsImages.size()) {
+			//remove one heart
+			ImageView lastHeart = heartsImages.get(heartsImages.size()-1);
+			pane.getChildren().remove(lastHeart);
+			heartsImages.remove(lastHeart);
+		}
+	}
 	private void paintHearts() {
 		heartsImages = new ArrayList<ImageView>(); 
 		//create three hearts ;)

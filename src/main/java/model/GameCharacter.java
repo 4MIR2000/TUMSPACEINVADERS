@@ -38,4 +38,8 @@ public abstract class GameCharacter extends GameObject {
 	public boolean isAlive() {
 		return lives>0; 
 	}
+	
+	public int getLives() {
+		return lives; 
+	}
 }
