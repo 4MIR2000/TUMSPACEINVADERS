@@ -11,6 +11,7 @@ import controller.Gameboard;
 import controller.KeyboardController;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
+import javafx.scene.CacheHint;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -61,7 +62,7 @@ public class GameboardUI extends Canvas{
 	private int enemyShootTimer = 0;
 	
 	private String backButton_style = "-fx-background-color: transparent; -fx-background-repeat: no-repeat; -fx-background-image: url('blue_sliderLeft.png')";
-
+    
 	private MainMenu mainMenu; 
 	public GameboardUI(MainMenu menu) {
 		this.mainMenu = menu; 
@@ -70,6 +71,8 @@ public class GameboardUI extends Canvas{
 	
 	private void gameSetup() {
 		pane = new AnchorPane(); 
+		pane.setCache(true);
+		pane.setCacheHint(CacheHint.SPEED);
 		scene = new Scene(pane,SIZE.getWidth(), SIZE.getHeight());
 		stage = new Stage(); 
 		stage.setScene(scene); 
@@ -84,6 +87,7 @@ public class GameboardUI extends Canvas{
 		scene.getRoot().requestFocus();
 		stage.show();
 		startGameLoop();
+		
 	}
 	
 
@@ -92,6 +96,8 @@ public class GameboardUI extends Canvas{
 		playerImage.setLayoutX(gameboard.getPlayer().getPosition().getX());
 		playerImage.setLayoutY(gameboard.getPlayer().getPosition().getY());
 		pane.getChildren().add(playerImage); 
+		playerImage.setCache(true);
+		playerImage.setCacheHint(CacheHint.SPEED);
 	}
 	
 	public void paintEnemies() {
@@ -102,6 +108,8 @@ public class GameboardUI extends Canvas{
 			ImageView iv = new ImageView(getClass().getClassLoader().getResource(enemy.getIcon()).toExternalForm());
 			iv.setLayoutX(enemy.getPosition().getX());
 			iv.setLayoutY(enemy.getPosition().getY());
+			iv.setCache(true);
+			iv.setCacheHint(CacheHint.SPEED);
 			enemiesImages.add(iv);
 			pane.getChildren().add(iv);
 		}
@@ -122,6 +130,8 @@ public class GameboardUI extends Canvas{
 		
 		shotView.setLayoutX(shot.getPosition().getX());
 		shotView.setLayoutY(shot.getPosition().getY());
+		shotView.setCache(true);
+		shotView.setCacheHint(CacheHint.SPEED);
 		pane.getChildren().add(shotView);
 		
 	}
@@ -153,6 +163,7 @@ public class GameboardUI extends Canvas{
 							//stop shooting animation
 							resetEnemyIcons(); 
 						}
+						
 						if(keyboardController.isSpaceKeyPressed()) {
 							//shoot
 							if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=400000000) {
@@ -194,6 +205,7 @@ public class GameboardUI extends Canvas{
 				
 		};
 		gameTimer.start();
+		
 	}
 	
 	//removes heart if player lost one life
@@ -214,6 +226,8 @@ public class GameboardUI extends Canvas{
 			pane.getChildren().add(view); 
 			view.setLayoutX(heart.getPosition().getX());
 			view.setLayoutY(heart.getPosition().getY());
+			view.setCache(true);
+			view.setCacheHint(CacheHint.SPEED);
 			heartsImages.add(view); 
 			
 		}
@@ -344,7 +358,7 @@ public class GameboardUI extends Canvas{
 				getClass().getClassLoader().getResource(BACKGROUNDIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true),
 		        BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
 		          BackgroundSize.DEFAULT);;
-		          
+		 
 		pane.setBackground(new Background(backgroundView));
 		
 	}
@@ -366,6 +380,8 @@ public class GameboardUI extends Canvas{
 			}
 			
 		});
+		backBtn.setCache(true);
+		backBtn.setCacheHint(CacheHint.SPEED);
 		pane.getChildren().add(backBtn);
 		
 	}

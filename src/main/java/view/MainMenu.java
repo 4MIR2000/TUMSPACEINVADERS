@@ -51,6 +51,7 @@ public class MainMenu extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		initializeMainMenu();
 		stage.show();
+		
 	}
 	
 	public void initializeMainMenu() {
