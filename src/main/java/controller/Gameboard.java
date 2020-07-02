@@ -119,7 +119,7 @@ public class Gameboard {
 		for (Pair<Shot, GameCharacter> shot : shots) {
 			//player reuses shot
 			if (shot.getKey().isDestroyed()) {
-				audio.playShotSound();
+				//audio.playShotSound();
 				return i;
 			}
 			i++;

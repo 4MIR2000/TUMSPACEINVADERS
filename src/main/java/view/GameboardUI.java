@@ -45,7 +45,7 @@ public class GameboardUI extends Canvas{
 	private Scene scene; 
 	private Stage stage;
 	
-	private ImageView playerImage; 
+	private ImageView playerImageView; 
 	private AnimationTimer gameTimer; 
 	
 	private List<ImageView> enemiesImages; 
@@ -63,6 +63,11 @@ public class GameboardUI extends Canvas{
 	
 	private String backButton_style = "-fx-background-color: transparent; -fx-background-repeat: no-repeat; -fx-background-image: url('blue_sliderLeft.png')";
     
+	private Image enemyImage;
+	private Image playerImage; 
+	private Image playerRightImage; 
+	private Image playerLeftImage; 
+	
 	private MainMenu mainMenu; 
 	public GameboardUI(MainMenu menu) {
 		this.mainMenu = menu; 
@@ -92,20 +97,25 @@ public class GameboardUI extends Canvas{
 	
 
 	public void paintPlayer() {
-		playerImage = new ImageView(getClass().getClassLoader().getResource(gameboard.getPlayer().getIcon()).toExternalForm());
-		playerImage.setLayoutX(gameboard.getPlayer().getPosition().getX());
-		playerImage.setLayoutY(gameboard.getPlayer().getPosition().getY());
-		pane.getChildren().add(playerImage); 
-		playerImage.setCache(true);
-		playerImage.setCacheHint(CacheHint.SPEED);
+		playerImage = new Image(getClass().getClassLoader().getResource(gameboard.getPlayer().getIcon()).toExternalForm());
+		playerRightImage = new Image(getClass().getClassLoader().getResource(gameboard.getPlayer().getRunIcon1()).toExternalForm());
+		playerLeftImage = new Image(getClass().getClassLoader().getResource(gameboard.getPlayer().getRunIcon2()).toExternalForm());
+		playerImageView = new ImageView(playerImage);
+		playerImageView.setLayoutX(gameboard.getPlayer().getPosition().getX());
+		playerImageView.setLayoutY(gameboard.getPlayer().getPosition().getY());
+		playerImageView.setCache(true);
+		playerImageView.setCacheHint(CacheHint.SPEED);
+		pane.getChildren().add(playerImageView); 
+		
 	}
 	
 	public void paintEnemies() {
 		List<Enemy> enemies = gameboard.getEnemies(); 
 		enemiesImages = new ArrayList<ImageView>();
+		enemyImage = new Image(getClass().getClassLoader().getResource(enemies.get(0).getIcon()).toExternalForm());
 		int i=0; 
 		for(Enemy enemy:enemies) {
-			ImageView iv = new ImageView(getClass().getClassLoader().getResource(enemy.getIcon()).toExternalForm());
+			ImageView iv = new ImageView(enemyImage);
 			iv.setLayoutX(enemy.getPosition().getX());
 			iv.setLayoutY(enemy.getPosition().getY());
 			iv.setCache(true);
@@ -113,6 +123,7 @@ public class GameboardUI extends Canvas{
 			enemiesImages.add(iv);
 			pane.getChildren().add(iv);
 		}
+		 
 			
 	}
 	
@@ -235,7 +246,7 @@ public class GameboardUI extends Canvas{
 	private void resetEnemyIcons() {
 		List<Enemy> enemies = gameboard.getEnemies(); 
 		for(int i=0; i<enemies.size(); i++) {
-			enemiesImages.get(i).setImage(new Image(getClass().getClassLoader().getResource(enemies.get(i).getIcon()).toExternalForm()));
+			enemiesImages.get(i).setImage(enemyImage);
 		}
 	}
 	
@@ -316,7 +327,7 @@ public class GameboardUI extends Canvas{
 			}
 			
 			//change image 
-			playerImage.setImage(new Image(getClass().getClassLoader().getResource(gameboard.getPlayer().getRunIcon1()).toExternalForm()));			
+			playerImageView.setImage(playerLeftImage);			
 		}
 		
 		//right key pressed
@@ -324,19 +335,19 @@ public class GameboardUI extends Canvas{
 			if(gameboard.getPlayer().getPosition().getX()<522) {
 				gameboard.getPlayer().move(Direction.right);
 			}
-			playerImage.setImage(new Image(getClass().getClassLoader().getResource(gameboard.getPlayer().getRunIcon2()).toExternalForm()));
+			playerImageView.setImage(playerRightImage);
 		}
 		
 		if(keyboardController.isRightKeyPressed()&&keyboardController.isLeftKeyPressed()) {
-			playerImage.setImage(new Image(gameboard.getPlayer().getIcon()));
+			playerImageView.setImage(playerImage);
 		}
 		
 		if(!keyboardController.isRightKeyPressed()&&!keyboardController.isLeftKeyPressed()) {
-			playerImage.setImage(new Image(gameboard.getPlayer().getIcon()));
+			playerImageView.setImage(playerImage);
 
 		}
 		
-		playerImage.setLayoutX(gameboard.getPlayer().getPosition().getX());
+		playerImageView.setLayoutX(gameboard.getPlayer().getPosition().getX());
 	}
 	
 	

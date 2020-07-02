@@ -22,17 +22,39 @@ public class AudioPlayer {
 	private MediaPlayer mediaPlayerBackgroundMusic;
 	private boolean playingBackgroundMusic;
 
+	private MediaPlayer mediaPlayerShot; 
+	private MediaPlayer mediaPlayerEnemyHurt; 
+	private MediaPlayer mediaPlayerPlayerHurt; 
+	
+	private MediaPlayer mediaPlayerDeath; 
 	public AudioPlayer() {
 		this.playingBackgroundMusic = false;
+		initializeMediaPlayer();
 	}
+
 
 	public void setShotSound(String shotSound) {
 		this.shotSound = shotSound;
 	}
 
+	private void initializeMediaPlayer() {
+		try {
+			mediaPlayerShot = new MediaPlayer(loadAudioFile(shotSound)); 
+			mediaPlayerEnemyHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
+			mediaPlayerEnemyHurt.setVolume(0.5);
+			mediaPlayerDeath = new MediaPlayer(loadAudioFile(enemyDeadSound));
+			mediaPlayerDeath.setVolume(0.2);
+			mediaPlayerPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
+			mediaPlayerPlayerHurt.setVolume(0.5);
+		}catch(Exception e) {
+			
+		}
+		
+	}
+	
 	public void playShotSound() {
 		try {
-			MediaPlayer mediaPlayerShot = new MediaPlayer(loadAudioFile(shotSound));
+			mediaPlayerShot.seek(mediaPlayerShot.getStartTime());
 			mediaPlayerShot.play();
 		}catch(Exception e) {
 			//System.err.println("sound could not be played: MediaException!"); 
@@ -42,9 +64,8 @@ public class AudioPlayer {
 	
 	public void playEnemyHurtSound() {
 		try {
-			MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
-			mediaPlayerHurt.setVolume(0.5);
-			mediaPlayerHurt.play();
+			mediaPlayerEnemyHurt.seek(mediaPlayerEnemyHurt.getStartTime());
+			mediaPlayerEnemyHurt.play();
 		}catch(Exception e) {
 			
 		}
@@ -53,9 +74,8 @@ public class AudioPlayer {
 
 	public void playEnemyDeadSound() {
 		try {
-			MediaPlayer mediaPlayerDeathSound = new MediaPlayer(loadAudioFile(enemyDeadSound));
-			mediaPlayerDeathSound.setVolume(0.2);
-			mediaPlayerDeathSound.play();
+			mediaPlayerDeath.seek(mediaPlayerDeath.getStartTime());
+			mediaPlayerDeath.play();
 		}catch(Exception e) {
 			
 		}
@@ -64,9 +84,8 @@ public class AudioPlayer {
 	
 	public void playPlayerHurtSound() {
 		try {
-			MediaPlayer mediaPlayerHurt = new MediaPlayer(loadAudioFile(playerHurtSound));
-			mediaPlayerHurt.setVolume(0.5);
-			mediaPlayerHurt.play();
+			mediaPlayerPlayerHurt.seek(mediaPlayerPlayerHurt.getStartTime());
+			mediaPlayerPlayerHurt.play();
 		}catch(Exception e) {
 			
 		}
