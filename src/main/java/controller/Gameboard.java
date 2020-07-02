@@ -177,6 +177,8 @@ public class Gameboard {
 			Enemy lastEnemy = getLastEnemy();
 			Enemy firstEnemy = getFirstEnemy();
 
+			if(lastEnemy==null||firstEnemy==null) return;
+			
 			if (lastEnemy.getPosition().getX() + lastEnemy.getSpeed() >= ENEMIESMAXX) {
 				// go to left;
 				enemiesGoToRight = false;

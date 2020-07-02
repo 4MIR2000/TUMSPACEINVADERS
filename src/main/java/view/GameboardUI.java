@@ -59,6 +59,8 @@ public class GameboardUI extends Canvas{
 	
 	private long nanosOfLastPlayerShooting = -1;
 	
+	private long frameCount = 0;
+	
 	private int enemyShootTimer = 0;
 	
 	private String backButton_style = "-fx-background-color: transparent; -fx-background-repeat: no-repeat; -fx-background-image: url('blue_sliderLeft.png')";
@@ -147,78 +149,116 @@ public class GameboardUI extends Canvas{
 		
 	}
 	
-	private void startGameLoop() {
-		gameTimer = new AnimationTimer() {
-		
+	private void startGameLoop() {	
+		AnimationTimer playerShootingTimer = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if(!gameboard.gameIsClosed()) {
-					if(!gameboard.checkIfGameEnded()) {
-						if(nanosOfLastPlayerMovement==-1||now-nanosOfLastPlayerMovement>=1000000) {
+				if(keyboardController.isSpaceKeyPressed()) {
+					//shoot
+					if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=400000000) {
+						playerShoot();
+						nanosOfLastPlayerShooting = now;
+					}
+				}
+				
+			}
+		};
+		playerShootingTimer.start();
+		
+		AnimationTimer enemyShootingTimer = new AnimationTimer() {
+
+			@Override
+			public void handle(long now) {
+				if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=600000000) {
+					enemyShoot();
+					nanosOfLastEnemyShooting = now; 
+				}
+				if(now-nanosOfLastEnemyShooting>=400000000) {						
+					//stop shooting animation
+					resetEnemyIcons(); 
+				}
+			}
+			
+		};
+		enemyShootingTimer.start();
+		
+		AnimationTimer moveShotsTimer = new AnimationTimer() {
+			
+			@Override
+			public void handle(long now) {
+				if(nanosOfLastShotMovement==-1||now-nanosOfLastShotMovement>=1000000) {
+					moveShots(); 
+					gameboard.collisionDetection(); 
+					//remove destoryed shots 
+					removeDestroyedShots(); 
+					removeKilledEnemies();
+					removeHeart(); 
+					//remove destroyed enemies
+					nanosOfLastShotMovement = now;
+				}
+				
+				
+			}
+		};
+		moveShotsTimer.start();
+		
+		AnimationTimer moveEnemiesTimer = new AnimationTimer() {
+			
+			@Override
+			public void handle(long now) {
+				//move enemies slower
+				if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=1000000) {
+					moveEnemies();
+					nanosOfLastEnemyMovement = now; 
+				}
+																				
+				
+				
+			}
+		};
+		moveEnemiesTimer.start();
+		
+		gameTimer = new AnimationTimer() {
+			
+			@Override
+			public void handle(long now) {
+					if(!gameboard.gameIsClosed()&&!gameboard.checkIfGameEnded()) {
+						if(nanosOfLastPlayerMovement==-1||now-nanosOfLastPlayerMovement>=900000) {
 							movePlayer();
 							nanosOfLastPlayerMovement = now;
-						}
-													
-						//move enemies slower
-						if(nanosOfLastEnemyMovement==-1||now-nanosOfLastEnemyMovement>=2000000) {
-							moveEnemies();
-							nanosOfLastEnemyMovement = now; 
-						}
-						
-						if(nanosOfLastEnemyShooting==-1||now-nanosOfLastEnemyShooting>=600000000) {
-							enemyShoot();
-							nanosOfLastEnemyShooting = now; 
-						}
-						
-						if(now-nanosOfLastEnemyShooting>=400000000) {						
-							//stop shooting animation
-							resetEnemyIcons(); 
-						}
-						
-						if(keyboardController.isSpaceKeyPressed()) {
-							//shoot
-							if(nanosOfLastPlayerShooting==-1||now-nanosOfLastPlayerShooting>=400000000) {
-								playerShoot();
-								nanosOfLastPlayerShooting = now;
-							}
-						}
-						
-						if(nanosOfLastShotMovement==-1||now-nanosOfLastShotMovement>=2000000) {
-							moveShots(); 
-							gameboard.collisionDetection(); 
-							//remove destoryed shots 
-							removeDestroyedShots(); 
-							removeKilledEnemies();
-							removeHeart(); 
-							//remove destroyed enemies
-							nanosOfLastShotMovement = now;
-						}
+						}												
 						
 					}else {
-						//gameEnded
-						if(gameboard.playerHasLost()) {
-							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(LOSTIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true));
-							view.setOpacity(20);
-							pane.getChildren().add(view);
-						}else {
-							ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true));
-							view.setOpacity(0.5);
-							pane.getChildren().add(view);
+						if(!gameboard.gameIsClosed()) {
+							//gameEnded
+							showEndResult();
+							createBackButton();
 						}
+						
 						gameTimer.stop();
-						createBackButton();
+						playerShootingTimer.stop();
+						enemyShootingTimer.stop();
+						moveShotsTimer.stop();
+						moveEnemiesTimer.stop();
+						
 					}
-									
-				}else {
-					gameTimer.stop();
-				}
 			}
 				
 		};
 		gameTimer.start();
-		
 	}
 	
+	private void showEndResult() {
+		if(gameboard.playerHasLost()) {
+			ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(LOSTIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true));
+			view.setOpacity(20);
+			pane.getChildren().add(view);
+		}else {
+			ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(WONIMAGE).toExternalForm(),SIZE.getWidth(),SIZE.getHeight(),false,true));
+			view.setOpacity(0.5);
+			pane.getChildren().add(view);
+		}
+	}
 	//removes heart if player lost one life
 	private void removeHeart() {
 		if(heartsImages.size()>0&&gameboard.getPlayer().getLives()<heartsImages.size()) {
