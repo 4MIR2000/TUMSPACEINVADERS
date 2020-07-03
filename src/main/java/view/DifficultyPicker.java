@@ -1,11 +1,11 @@
-package view;
+package main.java.view;
 
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.Level;
+import main.java.model.Level;
 
 public class DifficultyPicker extends HBox{
 	private ImageView circleImage; 

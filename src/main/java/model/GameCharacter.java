@@ -1,4 +1,6 @@
-package model;
+package main.java.model;
+
+import main.java.view.Dimension;
 
 //in the analysis object model an abstract parent class should be added for Player and Enemy
 public abstract class GameCharacter extends GameObject {
@@ -6,8 +8,8 @@ public abstract class GameCharacter extends GameObject {
 	private int speed; 
 	private String shootingIcon; 
 	
-	public GameCharacter(int speed,String icon,String shootingIcon, Coordinate position) {
-		super(icon,position); 
+	public GameCharacter(int speed,String icon,String shootingIcon, Coordinate position, Dimension size) {
+		super(icon,position,size); 
 		this.shootingIcon = shootingIcon;
 		this.speed = speed; 
 		

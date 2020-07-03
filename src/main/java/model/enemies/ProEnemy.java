@@ -1,10 +1,10 @@
-package model.enemies;
+package main.java.model.enemies;
 
 import java.util.Random;
 
-import model.Coordinate;
-import model.Direction;
-import model.Shot;
+import main.java.model.Coordinate;
+import main.java.model.Direction;
+import main.java.model.Shot;
 
 public class ProEnemy extends Enemy {
 	private static final String PROICON = "proEnemy1.png";

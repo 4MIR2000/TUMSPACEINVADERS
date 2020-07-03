@@ -1,13 +1,18 @@
-package model;
+package main.java.model;
+
+import main.java.view.Dimension;
+//is not implemented yet
 
 //TODO add tables here as obstacles 
-public class Obstacle {
+public class Obstacle extends GameObject{
 
-	private String icon; 
+	private static final String OBSTACLEICON = "table.png";
+	private static final Dimension SIZE = new Dimension(448,473);
 	private Coordinate position; 
 	
-	public Obstacle(String icon, Coordinate position) {
-		this.icon = icon; 
-		this.position = position; 
+	public Obstacle(Coordinate position) {
+		super(OBSTACLEICON,position,SIZE);
 	}
+	
+	
 }

@@ -1,10 +1,14 @@
-package model;
+package main.java.model;
+
+import main.java.view.Dimension;
 
 public class Player extends GameCharacter{
 	private static final String PLAYERICON = "player.png";
  
+	private static final Dimension PLAYERSIZE = new Dimension(70,116); 
+	
 	public Player(Coordinate position) {
-		super(1,PLAYERICON,PLAYERICON, position);
+		super(1,PLAYERICON,PLAYERICON, position, PLAYERSIZE);
 	}
 
 	//the player sets the direction through the keyboard 

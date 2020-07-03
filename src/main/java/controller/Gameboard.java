@@ -1,4 +1,4 @@
-package controller;
+package main.java.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,13 +9,13 @@ import java.util.stream.IntStream;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import model.*;
-import model.enemies.Enemy;
-import model.enemies.NoobEnemy;
-import model.enemies.ProEnemy;
-import model.enemies.SemiProEnemy;
-import view.GameboardUI;
-import view.Options;
+import main.java.model.*;
+import main.java.model.enemies.Enemy;
+import main.java.model.enemies.NoobEnemy;
+import main.java.model.enemies.ProEnemy;
+import main.java.model.enemies.SemiProEnemy;
+import main.java.view.GameboardUI;
+import main.java.view.Options;
 
 public class Gameboard {
 	// private Level level;
@@ -135,15 +135,21 @@ public class Gameboard {
 				shot.getKey().setDestroyed(true);
 		}
 	}
+	
+	public void addShot(Pair<Shot,GameCharacter> shot) {
+		//important: make sure gameboardUI.shots also contains the shot
+		shots.add(shot);
+	}
 
 	public void createHearts() {
 		hearts = new ArrayList<Heart>(); 
 		int gapSize = 5; 
 		IntStream.range(1,4).forEach(i->{
-			int x = (int) (GameboardUI.SIZE.getWidth()-i*(Heart.SIZE.getWidth()+gapSize));
+			Heart heart = new Heart(); 
+			int x = (int) (GameboardUI.SIZE.getWidth()-i*(heart.getSize().getWidth()+gapSize));
 			int y = 0; 
 			Coordinate position = new Coordinate(x,y); 
-			Heart heart = new Heart(position); 
+			heart.setPosition(position);
 			hearts.add(heart);
 		});
 	}

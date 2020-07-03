@@ -1,4 +1,4 @@
-package model;
+package main.java.model;
 
 public class Pair<T1,T2> {
 	private T1 key;

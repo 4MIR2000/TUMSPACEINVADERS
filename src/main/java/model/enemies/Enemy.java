@@ -1,16 +1,17 @@
-package model.enemies;
+package main.java.model.enemies;
 
-import model.GameCharacter;
-import model.Shot;
-import model.Coordinate;
-import model.Direction;
+import main.java.model.Coordinate;
+import main.java.model.Direction;
+import main.java.model.GameCharacter;
+import main.java.model.Shot;
+import main.java.view.Dimension;
 
 public abstract class Enemy extends GameCharacter {
-	
 	private int shootingRate; 
+	private static final Dimension ENEMYSIZE = new Dimension(70,116);
 	
 	public Enemy(int speed, int shootingRate, String icon, String shootingIcon,Coordinate position) {
-		super(speed, icon, shootingIcon,position);
+		super(speed, icon, shootingIcon,position, ENEMYSIZE);
 		this.shootingRate = shootingRate;
 	}
 	

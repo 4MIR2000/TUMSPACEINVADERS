@@ -1,6 +1,6 @@
-package model;
+package main.java.model;
 
-import view.MainMenu;
+import main.java.view.MainMenu;
 
 public class MainApplication {
 

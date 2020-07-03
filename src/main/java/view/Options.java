@@ -1,4 +1,4 @@
-package view;
+package main.java.view;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.Level;
+import main.java.model.Level;
 
 public class Options {
 	

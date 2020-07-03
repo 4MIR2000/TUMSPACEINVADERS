@@ -1,8 +1,8 @@
-package model.enemies;
+package main.java.model.enemies;
 
-import model.Coordinate;
-import model.Direction;
-import model.Shot;
+import main.java.model.Coordinate;
+import main.java.model.Direction;
+import main.java.model.Shot;
 
 public class NoobEnemy extends Enemy {
 	private static final String NOOBICON = "noobEnemy1.png";

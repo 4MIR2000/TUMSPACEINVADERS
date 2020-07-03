@@ -1,11 +1,11 @@
-package controller;
+package main.java.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import model.Player;
-import view.GameboardUI;
+import main.java.model.Player;
+import main.java.view.GameboardUI;
 
 public class KeyboardController {
 	private Player player; 

@@ -1,4 +1,4 @@
-package view;
+package main.java.view;
 
 import java.awt.Canvas;
 import java.util.ArrayList;
@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import controller.Gameboard;
-import controller.KeyboardController;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.CacheHint;
@@ -24,13 +22,15 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import model.Coordinate;
-import model.Direction;
-import model.GameCharacter;
-import model.Heart;
-import model.Pair;
-import model.Shot;
-import model.enemies.Enemy;
+import main.java.controller.Gameboard;
+import main.java.controller.KeyboardController;
+import main.java.model.Coordinate;
+import main.java.model.Direction;
+import main.java.model.GameCharacter;
+import main.java.model.Heart;
+import main.java.model.Pair;
+import main.java.model.Shot;
+import main.java.model.enemies.Enemy;
 
 public class GameboardUI extends Canvas{
 	private static final String BACKGROUNDIMAGE = "game_background.jpg";
@@ -273,7 +273,8 @@ public class GameboardUI extends Canvas{
 		//create three hearts ;)
 		gameboard.createHearts();
 		for(Heart heart:gameboard.getHearts()) {
-			ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(heart.getIcon()).toExternalForm(),Heart.SIZE.getWidth(), Heart.SIZE.getHeight(),false,true)); 
+			ImageView view = new ImageView(new Image(getClass().getClassLoader().getResource(heart.getIcon()).toExternalForm(),
+					heart.getSize().getWidth(), heart.getSize().getHeight(),false,true)); 
 			pane.getChildren().add(view); 
 			view.setLayoutX(heart.getPosition().getX());
 			view.setLayoutY(heart.getPosition().getY());

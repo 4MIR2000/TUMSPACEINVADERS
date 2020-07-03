@@ -1,20 +1,25 @@
-package model;
+package main.java.model;
 
-public class Shot {
+import main.java.view.Dimension;
+
+public class Shot extends GameObject{
 	private int speed = 2;
 	private Direction direction;
-	private Coordinate position; 
-	private String icon =  "shot.png";
+	private static final String SHOTICON=  "shot.png";
+	private static final Dimension SHOTSIZE= new Dimension(32,32);
+	
 	private boolean isDestroyed; 
 	
-	public Shot(Direction direction, Coordinate startPos) {
+	public Shot(Direction direction, Coordinate position) {
+		super(SHOTICON, position, SHOTSIZE);
 		this.direction = direction; 
-		this.position = startPos; 
+		
 	}
 	
 	public Shot() {
-		
+		super(SHOTICON,null,SHOTSIZE);
 	}
+	
 	/*changes the position of the shot 
 	 * in a loop and moves it. 
 	 */
@@ -24,17 +29,6 @@ public class Shot {
 	
 	public void setDestroyed(boolean destroyed) {
 		this.isDestroyed = destroyed; 
-	}
-	
-	public void setPosition(Coordinate position) {
-		this.position = position; 
-	}
-	public Coordinate getPosition() {
-		return position; 
-	}
-	
-	public String getIcon() {
-		return icon; 
 	}
 	
 	public void move() {
@@ -48,22 +42,22 @@ public class Shot {
 	//moves the shot according to speed and direction
 	private void moveStraight() {
 		if(direction==Direction.up) {
-			position.setY(position.getY()-speed);
+			getPosition().setY(getPosition().getY()-speed);
 		}else {
 			if(direction==Direction.down) {
-				position.setY(position.getY()+speed);
+				getPosition().setY(getPosition().getY()+speed);
 			}
 		}
 	}
 	
 	private void moveDiagonal() {
 		if(direction==Direction.downDiagonal) {
-			position.setY(position.getY()+speed);
-			position.setX(position.getX()+1);
+			getPosition().setY(getPosition().getY()+speed);
+			getPosition().setX(getPosition().getX()+1);
 		}else {
 			if(direction==Direction.upDiagonal) {
-				position.setY(position.getY()-speed);
-				position.setX(position.getX()+1);
+				getPosition().setY(getPosition().getY()-speed);
+				getPosition().setX(getPosition().getX()+1);
 			}
 		}
 	}
