@@ -37,8 +37,6 @@ public class ModelTest {
 	@TestSubject 
 	private Gameboard gameBoard = new Gameboard();
 	
-	@Mock
-	private GameObject obstacle; 
 	
 	//testing only Collision class
 	@Test
@@ -107,6 +105,19 @@ public class ModelTest {
 		assertTrue(gameBoard.playerHasLost());
 	}
 	
-	
+	@Test
+	public void playerShootTest() {
+		int initialNumOfShots = gameBoard.getShots().size();
+		gameBoard.playerShoot();
+		
+		assertEquals(gameBoard.getShots().size(),initialNumOfShots+1);
+		
+		//the created shot should not be destroyed 
+		Shot lastShot = gameBoard.getShots().get(gameBoard.getShots().size()-1).getKey(); 
+		assertFalse(lastShot.isDestroyed());
+		
+		//the shot should go from bottom to up 
+		assertEquals(lastShot.getDirection(), Direction.up);
+	}
 	
 }

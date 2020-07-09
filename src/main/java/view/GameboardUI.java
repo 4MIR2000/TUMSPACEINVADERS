@@ -409,6 +409,7 @@ public class GameboardUI extends Canvas{
 		return stage; 
 	}
 	
+
 	
 	public void createBackground() {
 		BackgroundImage backgroundView = new BackgroundImage(new Image(
@@ -433,7 +434,7 @@ public class GameboardUI extends Canvas{
 			public void handle(MouseEvent event) {
 				gameboard.stopGame();
 				stage.hide();
-				returnToMainMenu(new Analyser());
+				returnToMainMenu(null);
 			}
 			
 		});
@@ -444,8 +445,8 @@ public class GameboardUI extends Canvas{
 	}
 
 	public void returnToMainMenu(AnalyserInterface analyser) {
-		
-		mainMenu.Callback(analyser,gameStartTime);
+		analyser.setGameStartTime(gameStartTime);
+		mainMenu.Callback(analyser);
 		
 	}
 }

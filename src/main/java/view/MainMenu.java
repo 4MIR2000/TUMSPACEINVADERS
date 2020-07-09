@@ -50,7 +50,7 @@ public class MainMenu extends Application{
 	
 	private final String LOGOIMAGEPATH = "logo.png";
 	
-	private List<DataObject> collectedData; 
+	private List<DataObject> collectedData = new ArrayList<DataObject>();  
 	
 	private int highScore; 
 	private int winstreak; 
@@ -70,7 +70,7 @@ public class MainMenu extends Application{
 		pane = new BorderPane(); 
 		pane.setPadding(new Insets(20,20,20,20));
 
-		collectedData = new ArrayList<DataObject>(); 
+		
 		scene = new Scene(pane, SIZE.getWidth(), SIZE.getHeight());
 		
 		stage = new Stage(); 
@@ -139,25 +139,48 @@ public class MainMenu extends Application{
 		pane.setTop(logoBox);
 	}
 	
+	public void setWinStreak(int winstreak) {
+		this.winstreak = winstreak; 
+	}
+	
+	public void setHighscore(int score) {
+		this.highScore = score; 
+	}
 	
 	//show menu again
-	public void Callback(AnalyserInterface analyser,LocalDateTime startTime) {
+	public void Callback(AnalyserInterface analyser) {
 		showStageAgain();
+		if(analyser==null) 
+			return; 
 		
 		Skill skill = analyser.getPlayerSkill(); 
 		if(skill==Skill.good||skill==Skill.veryGood) {
 			winstreak++; 
 		}else {
-			if(winstreak>highScore) {
-				highScore = winstreak; 
-			}
 			winstreak = 0; 
 		}
-		DataObject dataObject = new DataObject(startTime,LocalDateTime.now(),analyser.getPlayerSkill());
+		if(winstreak>highScore) {
+			highScore = winstreak; 
+		}
+		
+		DataObject dataObject = new DataObject(analyser.getGameStartTime(),LocalDateTime.now(),skill);
 		collectedData.add(dataObject); 
 	}
 	
+	public List<DataObject> getCollectedData(){
+		return collectedData; 
+	}
+	
+	public int getHeighScore() {
+		return highScore; 
+	}
+	
+	public int getWinstreak() {
+		return winstreak;
+	}
+	
 	public void showStageAgain() {
+		if(stage==null) return;
 		stage.show(); 
 	}
 	private void createBackground() {
