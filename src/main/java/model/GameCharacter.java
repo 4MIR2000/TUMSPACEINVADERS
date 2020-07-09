@@ -12,9 +12,7 @@ public abstract class GameCharacter extends GameObject {
 		super(icon,position,size); 
 		this.shootingIcon = shootingIcon;
 		this.speed = speed; 
-		
 	}
-	
 
 	public abstract void shoot(Shot shot, boolean reset); 
 	
@@ -30,8 +28,6 @@ public abstract class GameCharacter extends GameObject {
 	public void setSpeed(int speed) {
 		this.speed = speed; 
 	}
-	
-	
 	
 	public int getSpeed() {
 		return speed; 
