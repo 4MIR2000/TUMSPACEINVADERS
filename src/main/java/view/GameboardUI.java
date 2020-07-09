@@ -113,7 +113,6 @@ public class GameboardUI extends Canvas{
 		playerImageView.setCache(true);
 		playerImageView.setCacheHint(CacheHint.SPEED);
 		pane.getChildren().add(playerImageView); 
-		
 	}
 	
 	public void paintEnemies() {
@@ -299,7 +298,7 @@ public class GameboardUI extends Canvas{
 	private void playerShoot() {
 		int indexOfReUseShot = gameboard.reUseShot(); 
 		if(indexOfReUseShot==-1) {
-			//there is no detroyed shot -> create a new one 
+			//there is no destroyed shot -> create a new one 
 			Shot createdShot = gameboard.playerShoot();
 			paintShot(createdShot, -1);
 		}else {
@@ -434,7 +433,7 @@ public class GameboardUI extends Canvas{
 			public void handle(MouseEvent event) {
 				gameboard.stopGame();
 				stage.hide();
-				returnToMainMenu(null);
+				returnToMainMenu(null); 	//analyser not implemented yet 
 			}
 			
 		});
@@ -445,7 +444,9 @@ public class GameboardUI extends Canvas{
 	}
 
 	public void returnToMainMenu(AnalyserInterface analyser) {
-		analyser.setGameStartTime(gameStartTime);
+		if(analyser!=null)
+			analyser.setGameStartTime(gameStartTime);
+		
 		mainMenu.Callback(analyser);
 		
 	}

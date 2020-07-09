@@ -65,7 +65,6 @@ public class ModelTest {
 		
 		//shot should be detroyed after collision
 		assertTrue(shotToEnemy.isDestroyed());
-		
 	}
 
 	@Test
@@ -118,6 +117,46 @@ public class ModelTest {
 		
 		//the shot should go from bottom to up 
 		assertEquals(lastShot.getDirection(), Direction.up);
+	}
+	
+	public void enemyShootTest() {
+		//all 3 enemies shoot
+		gameBoard.getEnemies().forEach(enemy -> enemy.setShootingRate(1));
+		
+		//add destroyed shot
+		Shot shot = new Shot(Direction.up,new Coordinate(140,255));
+		shot.setDestroyed(true);
+		gameBoard.addShot(new Pair(shot, player));
+		
+		List<Integer> result = gameBoard.enemyShoot();
+		
+		//shot reuse, 2 new shots
+		assertEquals(3, result.size());
+		assertFalse(shot.isDestroyed());
+		assertEquals(Direction.down,shot.getDirection());
+		assertEquals(shot, gameBoard.getShots().get(0).getKey());
+	}
+	
+	@Test
+	public void moveEnemiesTest() {
+		//kill enemy0
+		gameBoard.getEnemies().get(0).setLives(0);
+		
+		Coordinate enemy0 = gameBoard.getEnemies().get(0).getPosition();
+		Coordinate enemy1 = gameBoard.getEnemies().get(1).getPosition();
+		Coordinate enemy2 = gameBoard.getEnemies().get(2).getPosition();
+		
+		gameBoard.moveEnemies();
+		
+		//enemy0 on same position
+		assertEquals(enemy0, gameBoard.getEnemies().get(0).getPosition());
+		assertEquals(enemy1.getX() + 1, gameBoard.getEnemies().get(1).getPosition().getX());
+		assertEquals(enemy2.getX() + 1, gameBoard.getEnemies().get(2).getPosition().getX());
+	}
+	
+	@Test
+	public void playerMoveTest() {
+		
 	}
 	
 }
