@@ -8,7 +8,7 @@ import main.java.view.Dimension;
 
 public abstract class Enemy extends GameCharacter {
 	private int shootingRate; 
-	private static final Dimension ENEMYSIZE = new Dimension(70,116);
+	private static final Dimension ENEMYSIZE = new Dimension(82,110);
 	
 	public Enemy(int speed, int shootingRate, String icon, String shootingIcon,Coordinate position) {
 		super(speed, icon, shootingIcon,position, ENEMYSIZE);

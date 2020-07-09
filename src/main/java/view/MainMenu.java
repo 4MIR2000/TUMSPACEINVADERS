@@ -4,10 +4,16 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import main.java.model.AnalyserInterface;
+import main.java.model.DataObject;
 import main.java.model.Level;
+import main.java.model.Skill;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -43,6 +49,12 @@ public class MainMenu extends Application{
 	private CustomButton button_exit; 
 	
 	private final String LOGOIMAGEPATH = "logo.png";
+	
+	private List<DataObject> collectedData; 
+	
+	private int highScore; 
+	private int winstreak; 
+	
 	public static void startApp(String[] args) {
 		launch(args);
 	}
@@ -58,6 +70,7 @@ public class MainMenu extends Application{
 		pane = new BorderPane(); 
 		pane.setPadding(new Insets(20,20,20,20));
 
+		collectedData = new ArrayList<DataObject>(); 
 		scene = new Scene(pane, SIZE.getWidth(), SIZE.getHeight());
 		
 		stage = new Stage(); 
@@ -128,10 +141,25 @@ public class MainMenu extends Application{
 	
 	
 	//show menu again
-	public void Callback() {
-		stage.show();
+	public void Callback(AnalyserInterface analyser,LocalDateTime startTime) {
+		showStageAgain();
+		
+		Skill skill = analyser.getPlayerSkill(); 
+		if(skill==Skill.good||skill==Skill.veryGood) {
+			winstreak++; 
+		}else {
+			if(winstreak>highScore) {
+				highScore = winstreak; 
+			}
+			winstreak = 0; 
+		}
+		DataObject dataObject = new DataObject(startTime,LocalDateTime.now(),analyser.getPlayerSkill());
+		collectedData.add(dataObject); 
 	}
 	
+	public void showStageAgain() {
+		stage.show(); 
+	}
 	private void createBackground() {
 		//TODO ADDBackgroundImage
 		//Image image = new Image("view/resources/")

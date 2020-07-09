@@ -5,7 +5,7 @@ import main.java.view.Dimension;
 public class Player extends GameCharacter{
 	private static final String PLAYERICON = "player.png";
  
-	private static final Dimension PLAYERSIZE = new Dimension(70,116); 
+	private static final Dimension PLAYERSIZE = new Dimension(72,96); 
 	
 	public Player(Coordinate position) {
 		super(1,PLAYERICON,PLAYERICON, position, PLAYERSIZE);

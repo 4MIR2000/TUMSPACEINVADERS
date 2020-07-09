@@ -1,6 +1,7 @@
 package main.java.view;
 
 import java.awt.Canvas;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import main.java.controller.Gameboard;
 import main.java.controller.KeyboardController;
+import main.java.model.Analyser;
+import main.java.model.AnalyserInterface;
 import main.java.model.Coordinate;
 import main.java.model.Direction;
 import main.java.model.GameCharacter;
@@ -71,6 +74,8 @@ public class GameboardUI extends Canvas{
 	private Image playerLeftImage; 
 	
 	private MainMenu mainMenu; 
+	
+	private LocalDateTime gameStartTime; 
 	public GameboardUI(MainMenu menu) {
 		this.mainMenu = menu; 
 		gameSetup(); 
@@ -94,7 +99,7 @@ public class GameboardUI extends Canvas{
 		scene.getRoot().requestFocus();
 		stage.show();
 		startGameLoop();
-		
+		gameStartTime = LocalDateTime.now(); 
 	}
 	
 
@@ -428,7 +433,7 @@ public class GameboardUI extends Canvas{
 			public void handle(MouseEvent event) {
 				gameboard.stopGame();
 				stage.hide();
-				mainMenu.Callback();
+				returnToMainMenu(new Analyser());
 			}
 			
 		});
@@ -438,4 +443,9 @@ public class GameboardUI extends Canvas{
 		
 	}
 
+	public void returnToMainMenu(AnalyserInterface analyser) {
+		
+		mainMenu.Callback(analyser,gameStartTime);
+		
+	}
 }

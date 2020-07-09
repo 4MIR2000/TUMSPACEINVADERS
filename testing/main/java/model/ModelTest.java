@@ -1,11 +1,12 @@
 package main.java.model;
 
-import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.easymock.*;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -80,4 +81,32 @@ public class ModelTest {
 		//shot should be detroyed after collision
 		assertTrue(shotToPlayer.isDestroyed());
 	}
+	
+	@Test 
+	public void enemyDieTest() {
+		//reset lives 
+		gameBoard.getEnemies().get(0).setLives(3);
+		for(int i=0;i<3; i++) {
+			Shot shot = new Shot(Direction.up,new Coordinate(140,255));
+			gameBoard.addShot(new Pair<Shot,GameCharacter>(shot,player));
+			gameBoard.collisionDetection();
+		}
+		
+		assertFalse(gameBoard.getEnemies().get(0).isAlive());
+	}
+	
+	@Test 
+	public void playerHasLostTest() {
+		player.setLives(3);
+		for(int i=0; i<3; i++) {
+			Shot shot = new Shot(Direction.down,new Coordinate(305,675));
+			gameBoard.addShot(new Pair<Shot,GameCharacter>(shot,noobEnemyNotHitted)); 
+			gameBoard.collisionDetection();
+		}
+		gameBoard.checkIfGameEnded(); 
+		assertTrue(gameBoard.playerHasLost());
+	}
+	
+	
+	
 }

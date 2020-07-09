@@ -92,7 +92,7 @@ public class Options {
 			@Override
 			public void handle(MouseEvent event) {
 				stage.hide();
-				mainMenu.Callback();
+				mainMenu.showStageAgain();
 			}
 			
 		});

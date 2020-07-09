@@ -44,4 +44,8 @@ public abstract class GameCharacter extends GameObject {
 	public int getLives() {
 		return lives; 
 	}
+	
+	public void setLives(int lives) {
+		this.lives = lives; 
+	}
 }

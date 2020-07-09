@@ -93,7 +93,7 @@ public class Gameboard {
 					
 				}
 				
-				audio.playShotSound();
+				//audio.playShotSound();
 				
 			}
 		}
@@ -108,7 +108,7 @@ public class Gameboard {
 	public Shot playerShoot() {
 		Shot shot = new Shot();
 		player.shoot(shot, true);
-		audio.playShotSound();
+		//audio.playShotSound();
 		shots.add(new Pair(shot,player));
 		return shot;
 	}
@@ -119,7 +119,7 @@ public class Gameboard {
 		for (Pair<Shot, GameCharacter> shot : shots) {
 			//player reuses shot
 			if (shot.getKey().isDestroyed()) {
-				//audio.playShotSound();
+				audio.playShotSound();
 				return i;
 			}
 			i++;
