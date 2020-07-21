@@ -14,11 +14,12 @@ public class Analyser implements AnalyserInterface {
 	
 	private int numberOfKilledEnemies; 
 	
-	public Analyser(LocalDateTime start, LocalDateTime end, boolean hasLost, boolean gameStoped, int numberOfKilledEnemies) {
+	public Analyser(LocalDateTime start, LocalDateTime end, boolean hasLost, boolean gameNotFinished, int numberOfKilledEnemies) {
 		this.startTime = start;
 		this.endTime = end; 
 		this.hasLost = hasLost; 
 		this.numberOfKilledEnemies = numberOfKilledEnemies;
+		this.gameNotFinished = gameNotFinished;
 	}
 	
 	@Override

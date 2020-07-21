@@ -10,11 +10,11 @@ import org.easymock.TestSubject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import main.java.*;
 import main.java.controller.Collision;
 import main.java.controller.Gameboard;
 import main.java.model.enemies.Enemy;
 import main.java.model.enemies.NoobEnemy;
+
 
 @RunWith(EasyMockRunner.class)
 public class ModelTest {

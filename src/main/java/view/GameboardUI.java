@@ -455,6 +455,7 @@ public class GameboardUI extends Canvas{
 			gameIsNotFinish = true;
 		}
 		
+		
 		Analyser analyser = new Analyser(gameStartTime,LocalDateTime.now(),gameboard.playerHasLost(),gameIsNotFinish,killedEnemies);
 		mainMenu.Callback(analyser);
 	}

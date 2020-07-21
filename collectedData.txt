@@ -1,8 +1,21 @@
-Der Spieler hat am 2020-07-21T20:01:32.083741 0 Sekunden lang das Spiel gespielt und war gut darin.
-Der Spieler hat am 2020-07-21T20:01:32.086075 0 Sekunden lang das Spiel gespielt und war schlecht darin.
-Der Spieler hat am 2020-07-21T20:01:32.083741 0 Sekunden lang das Spiel gespielt und war gut darin.
-Der Spieler hat am 2020-07-21T20:01:32.083741 0 Sekunden lang das Spiel gespielt und war gut darin.
-Der Spieler hat am 2020-07-21T20:01:32.088864 0 Sekunden lang das Spiel gespielt und war gut darin.
-Der Spieler hat am 2020-07-21T20:01:32.088864 0 Sekunden lang das Spiel gespielt und war gut darin.
-Der Spieler hat am 2020-07-21T20:01:32.089091 0 Sekunden lang das Spiel gespielt und war schlecht darin.
-Der Spieler hat am 2020-07-21T20:01:32.089846 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:20:42.115105 0 Sekunden lang das Spiel gespielt und war sehr gut darin.
+Der Spieler hat am 2020-07-21T20:21:26.866296 0 Sekunden lang das Spiel gespielt und war sehr gut darin.
+Der Spieler hat am 2020-07-21T20:22:01.924790 0 Sekunden lang das Spiel gespielt und war sehr gut darin.
+Der Spieler hat am 2020-07-21T20:23:05.840831 1 Sekunden lang das Spiel gespielt und war sehr gut darin.
+Der Spieler hat am 2020-07-21T20:23:36.197845 1 Sekunden lang das Spiel gespielt und war schlecht darin.
+Der Spieler hat am 2020-07-21T20:42:02.595472 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:42:02.597278 0 Sekunden lang das Spiel gespielt und war schlecht darin.
+Der Spieler hat am 2020-07-21T20:42:02.595472 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:42:02.595472 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:42:02.599834 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:42:02.599834 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:42:02.599961 0 Sekunden lang das Spiel gespielt und war schlecht darin.
+Der Spieler hat am 2020-07-21T20:42:02.600880 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:58:42.336528 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:58:42.338183 0 Sekunden lang das Spiel gespielt und war schlecht darin.
+Der Spieler hat am 2020-07-21T20:58:42.336528 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:58:42.336528 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:58:42.340532 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:58:42.340532 0 Sekunden lang das Spiel gespielt und war gut darin.
+Der Spieler hat am 2020-07-21T20:58:42.340628 0 Sekunden lang das Spiel gespielt und war schlecht darin.
+Der Spieler hat am 2020-07-21T20:58:42.341521 0 Sekunden lang das Spiel gespielt und war gut darin.
