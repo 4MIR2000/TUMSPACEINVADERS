@@ -34,10 +34,12 @@ public class DataCollectionTest {
 	public void initialize() {
 		expect(analyserMockWon.getPlayerSkill()).andReturn(Skill.good).anyTimes(); 
 		expect(analyserMockWon.getGameStartTime()).andReturn(LocalDateTime.now()).anyTimes(); //not important 
+		expect(analyserMockWon.getGameEndTime()).andReturn(LocalDateTime.now()).anyTimes(); //not important 
 		replay(analyserMockWon);
 		
 		expect(analyserMockLost.getPlayerSkill()).andReturn(Skill.bad).anyTimes(); 
 		expect(analyserMockLost.getGameStartTime()).andReturn(LocalDateTime.now()).anyTimes(); //not important 
+		expect(analyserMockLost.getGameEndTime()).andReturn(LocalDateTime.now()).anyTimes(); //not important 
 		replay(analyserMockLost);
 	}
 	

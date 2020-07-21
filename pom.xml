@@ -73,7 +73,7 @@
 			<configuration>
 				<archive>
 					<manifest>
-						<mainClass>model.MainApplication</mainClass>
+						<mainClass>main.java.model.MainApplication</mainClass>
 					</manifest>
 				</archive>
 				<descriptorRefs>

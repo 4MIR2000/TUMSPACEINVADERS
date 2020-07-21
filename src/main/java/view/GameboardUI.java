@@ -88,6 +88,9 @@ public class GameboardUI extends Canvas{
 		scene = new Scene(pane,SIZE.getWidth(), SIZE.getHeight());
 		stage = new Stage(); 
 		stage.setScene(scene); 
+		stage.setResizable(false);
+		stage.setOnCloseRequest(e->e.consume());
+
 		gameboard = new Gameboard();
 		keyboardController = new KeyboardController(gameboard.getPlayer(), this);
 		shotsImages = new ArrayList<ImageView>(); 
@@ -433,7 +436,7 @@ public class GameboardUI extends Canvas{
 			public void handle(MouseEvent event) {
 				gameboard.stopGame();
 				stage.hide();
-				returnToMainMenu(null); 	//analyser not implemented yet 
+				returnToMainMenu(); 
 			}
 			
 		});
@@ -443,11 +446,26 @@ public class GameboardUI extends Canvas{
 		
 	}
 
-	public void returnToMainMenu(AnalyserInterface analyser) {
-		if(analyser!=null)
-			analyser.setGameStartTime(gameStartTime);
+	public void returnToMainMenu() {
+		int killedEnemies = getNumberOfKilledEnemies();
+		boolean gameIsNotFinish = false; 
 		
+		if(killedEnemies<3) {
+			//spieler hat mitten im Spiel abgebrochen;
+			gameIsNotFinish = true;
+		}
+		
+		Analyser analyser = new Analyser(gameStartTime,LocalDateTime.now(),gameboard.playerHasLost(),gameIsNotFinish,killedEnemies);
 		mainMenu.Callback(analyser);
-		
+	}
+	
+	public int getNumberOfKilledEnemies() {
+		int counter = 0;
+		for(Enemy enemy:gameboard.getEnemies()) {
+			if(!enemy.isAlive()) {
+				counter++;
+			}
+		}
+		return counter;
 	}
 }

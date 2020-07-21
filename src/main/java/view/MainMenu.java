@@ -6,6 +6,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import main.java.model.AnalyserInterface;
 import main.java.model.DataObject;
+import main.java.model.DataWriter;
 import main.java.model.Level;
 import main.java.model.Skill;
 
@@ -51,6 +52,7 @@ public class MainMenu extends Application{
 	private final String LOGOIMAGEPATH = "logo.png";
 	
 	private List<DataObject> collectedData = new ArrayList<DataObject>();  
+	private DataWriter dataWriter = new DataWriter(); 
 	
 	private int highScore; 
 	private int winstreak; 
@@ -69,15 +71,15 @@ public class MainMenu extends Application{
 	public void initializeMainMenu() {
 		pane = new BorderPane(); 
 		pane.setPadding(new Insets(20,20,20,20));
-
-		
 		scene = new Scene(pane, SIZE.getWidth(), SIZE.getHeight());
-		
 		stage = new Stage(); 
+		stage.setResizable(false);
 		stage.setScene(scene);
+		stage.setResizable(false);
 		createButtons();
 		addButtonListeners();
 		createLogo();
+		
 	}
 	
 	public Stage getStage() {
@@ -163,8 +165,10 @@ public class MainMenu extends Application{
 			highScore = winstreak; 
 		}
 		
-		DataObject dataObject = new DataObject(analyser.getGameStartTime(),LocalDateTime.now(),skill);
+		DataObject dataObject = new DataObject(analyser.getGameStartTime(),analyser.getGameEndTime(),skill);
 		collectedData.add(dataObject); 
+		
+		dataWriter.writeToFile(dataObject);
 	}
 	
 	public List<DataObject> getCollectedData(){
